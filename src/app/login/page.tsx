@@ -1,29 +1,37 @@
 'use client';
 
-import { supabase } from '@/lib/supabaseClient';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function LoginPage() {
-  const handleGoogleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
+  const supabase = createClientComponentClient();
+  const router = useRouter();
+
+  const handleLogin = async () => {
+    await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        // 必要に応じてリダイレクトURL指定（省略可能）
-        // redirectTo: 'https://your-domain.com/dashboard',
+        redirectTo: `${location.origin}/api/auth/callback`,
       },
     });
-    if (error) {
-      alert('ログインエラー: ' + error.message);
-    }
   };
 
+  useEffect(() => {
+    // すでにログイン済みの場合、トップページへ
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) router.push('/dashboard');
+    });
+  }, []);
+
   return (
-    <div className="max-w-md mx-auto mt-20 p-4 text-center">
-      <h1 className="text-xl font-bold mb-6">Googleログイン</h1>
+    <div className="flex flex-col items-center justify-center h-screen px-4">
+      <h1 className="text-2xl font-bold mb-6">Yameru にログイン</h1>
       <button
-        onClick={handleGoogleLogin}
-        className="bg-blue-400 hover:bg-blue-500 px-6 py-3 rounded text-white font-semibold"
+        onClick={handleLogin}
+        className="bg-blue-500 text-white px-6 py-2 rounded shadow hover:bg-blue-600"
       >
-        Googleでログイン・登録
+        Googleでログイン
       </button>
     </div>
   );
