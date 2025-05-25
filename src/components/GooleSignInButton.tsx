@@ -19,9 +19,8 @@ export default function GoogleSignInButton() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      console.log('✅ current session:', data.session);
       if (data.session) {
-        router.push('/dashboard'); // セッションがあれば強制リダイレクト
+        router.push('/home'); // セッションがあれば強制リダイレクト
       }
     });
   }, []);
