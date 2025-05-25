@@ -24,7 +24,6 @@ export default function DashboardPage() {
   return (
     <>
       <div>ようこそ、{user.email}さん！</div>
-      <LogoutBtn />
     </>
   );
 }

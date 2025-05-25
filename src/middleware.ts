@@ -4,40 +4,26 @@ import { createClient } from './lib/supabase/server';
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
-
-  // Supabase クライアントを作成（middleware 用）
   const supabase = await createClient();
 
   const {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const { pathname } = req.nextUrl;
+  // 保護したいパスのリスト
+  const protectedPaths = ['/dashboard', '/profile', '/settings']; // 必要に応じて増やす
 
-  const isAuthPage = pathname === '/login';
-  const isProtectedPage = pathname.startsWith('/dashboard');
+  const pathname = req.nextUrl.pathname;
 
-  // 未ログインで保護ページにアクセス → ログインページへ
-  if (!session && isProtectedPage) {
-    console.log('未ログインで保護ページにアクセス:', pathname);
-    const loginUrl = req.nextUrl.clone();
-    loginUrl.pathname = '/login';
+  if (protectedPaths.some((path) => pathname.startsWith(path)) && !session) {
+    // 未ログインなら /login にリダイレクト
+    const loginUrl = new URL('/login', req.url);
     return NextResponse.redirect(loginUrl);
   }
 
-  // ログイン済みでログインページへアクセス → ダッシュボードへ
-  if (session && isAuthPage) {
-    console.log('ログイン済みでログインページにアクセス:', pathname);
-    const dashboardUrl = req.nextUrl.clone();
-    dashboardUrl.pathname = '/dashboard';
-    return NextResponse.redirect(dashboardUrl);
-  }
-
-  // それ以外はそのまま通す
-  console.log('その他のリクエスト:', pathname);
   return res;
 }
 
 export const config = {
-  matcher: ['/login', '/dashboard/:path*'],
+  matcher: ['/dashboard/:path*', '/profile/:path*', '/settings/:path*'], // 保護したいパスを指定
 };

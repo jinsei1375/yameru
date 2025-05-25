@@ -1,26 +1,18 @@
 'use client';
 
-import { createClient } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LogoutButton() {
-  const supabase = createClient();
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error('ログアウトエラー:', error.message);
-      return;
-    }
-
-    // クッキーとセッションの即時反映を促す
-    router.refresh();
-    router.push('/login');
-  };
+  const { signOut } = useAuth();
 
   return (
-    <button onClick={handleLogout} className="text-red-500">
+    <button
+      onClick={async () => {
+        await signOut();
+        window.location.href = '/login';
+      }}
+      className="px-3 py-1 bg-red-500 text-white rounded"
+    >
       ログアウト
     </button>
   );
