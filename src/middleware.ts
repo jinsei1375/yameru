@@ -11,7 +11,7 @@ export async function middleware(req: NextRequest) {
   } = await supabase.auth.getSession();
 
   // 保護したいパスのリスト
-  const protectedPaths = ['/dashboard', '/profile', '/settings']; // 必要に応じて増やす
+  const protectedPaths = ['/home', '/profile', '/settings', '/urges', '/count']; // 必要に応じて増やす
 
   const pathname = req.nextUrl.pathname;
 
@@ -25,5 +25,11 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/profile/:path*', '/settings/:path*'], // 保護したいパスを指定
+  matcher: [
+    '/home/:path*',
+    '/profile/:path*',
+    '/settings/:path*',
+    '/urges/:path*',
+    '/count/:path*',
+  ], // 保護したいパスを指定
 };
