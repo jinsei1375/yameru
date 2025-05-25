@@ -1,25 +1,30 @@
 'use client';
+
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import LogoutBtn from '@/components/LogoutBtn';
-import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
 export default function DashboardPage() {
-  const { user } = useAuth();
-  const router = useRouter();
-  console.log('user', user);
-  // ユーザーがいなければログインページへリダイレクト
+  const [user, setUser] = useState<any>(null);
+
   useEffect(() => {
-    if (user === null) {
-      router.replace('/login');
-    }
-  }, [user, router]);
-  if (user === null) return null;
+    const getUser = async () => {
+      const supabase = createClient(); // クライアント用
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
+    };
+
+    getUser();
+  }, []);
+
+  if (!user) return <p>Loading...</p>;
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold">ようこそ！{user?.user_metadata.name}さん</h1>
+    <>
+      <div>ようこそ、{user.email}さん！</div>
       <LogoutBtn />
-    </div>
+    </>
   );
 }

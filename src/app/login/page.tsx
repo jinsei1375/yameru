@@ -1,11 +1,11 @@
 'use client';
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function LoginPage() {
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -13,14 +13,19 @@ export default function LoginPage() {
       provider: 'google',
       options: {
         redirectTo: `${location.origin}/api/auth/callback`,
+        queryParams: {
+          prompt: 'select_account', // もしくは 'consent'
+        },
       },
     });
   };
 
   useEffect(() => {
-    // すでにログイン済みの場合、トップページへ
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) router.push('/dashboard');
+      console.log('✅ current session:', data.session);
+      if (data.session) {
+        router.push('/dashboard'); // セッションがあれば強制リダイレクト
+      }
     });
   }, []);
 

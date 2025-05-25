@@ -1,21 +1,34 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
+// The client you created from the Server-Side Auth instructions
+import { createClient } from '@/lib/supabase/server';
 
-export const GET = async (req: NextRequest) => {
-  const supabase = createRouteHandlerClient({ cookies });
-
-  const { searchParams } = new URL(req.url);
+export async function GET(request: Request) {
+  const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
-
-  if (code) {
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
-    }
-
-    return NextResponse.redirect(new URL('/dashboard', req.url));
+  // if "next" is in param, use it as the redirect URL
+  let next = searchParams.get('next') ?? '/dashboard';
+  if (!next.startsWith('/')) {
+    // if "next" is not a relative URL, use the default
+    next = '/';
   }
 
-  return NextResponse.json({ error: 'No code provided' }, { status: 400 });
-};
+  if (code) {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error) {
+      const forwardedHost = request.headers.get('x-forwarded-host'); // original origin before load balancer
+      const isLocalEnv = process.env.NODE_ENV === 'development';
+      if (isLocalEnv) {
+        console.log('Redirecting to local environment:', next);
+        return NextResponse.redirect(`${origin}${next}`);
+      } else if (forwardedHost) {
+        return NextResponse.redirect(`https://${forwardedHost}${next}`);
+      } else {
+        return NextResponse.redirect(`${origin}${next}`);
+      }
+    }
+  }
+
+  // return the user to an error page with instructions
+  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+}
