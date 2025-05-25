@@ -38,14 +38,14 @@ export function MenuModal() {
             <button
               onClick={closeUserMenu}
               aria-label="モーダルを閉じる"
-              className="absolute top-4 p-2 right-4 text-3xl text-background hover:text-gray-800 focus:outline-none"
+              className="absolute top-4 p-2 right-4 text-3xl text-black hover:text-gray-800 focus:outline-none"
             >
               &times;
             </button>
-            <DialogTitle className="text-lg font-bold mb-4 text-background">
+            <DialogTitle className="text-lg font-bold mb-4 text-black">
               ユーザーメニュー
             </DialogTitle>
-            <p className="mb-4 text-background">{user?.user_metadata?.name}さん</p>
+            <p className="mb-4 text-black">{user?.user_metadata?.name}さん</p>
             <LogoutButton />
           </motion.div>
         </Dialog>

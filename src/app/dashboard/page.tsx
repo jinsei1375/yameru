@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import LogoutBtn from '@/components/LogoutBtn';
 
 export default function DashboardPage() {
   const [user, setUser] = useState<any>(null);
