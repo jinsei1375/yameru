@@ -17,7 +17,6 @@ export function MenuModal() {
           open={isUserMenuOpen}
           onClose={closeUserMenu}
           className="fixed inset-0 z-50 flex items-center justify-center p-[5%]"
-          // p-[5%]で上下左右5%ずつpaddingを確保
         >
           {/* 背景の半透明オーバーレイ */}
           <div className="fixed inset-0 bg-black/30" aria-hidden="true" onClick={closeUserMenu} />
@@ -35,8 +34,18 @@ export function MenuModal() {
               height: 'calc(100vh - 10%)',
             }}
           >
-            <DialogTitle className="text-lg font-bold mb-4">ユーザーメニュー</DialogTitle>
-            <p className="mb-4">こんにちは、{user?.user_metadata?.name}さん</p>
+            {/* バツボタン */}
+            <button
+              onClick={closeUserMenu}
+              aria-label="モーダルを閉じる"
+              className="absolute top-4 p-2 right-4 text-3xl text-background hover:text-gray-800 focus:outline-none"
+            >
+              &times;
+            </button>
+            <DialogTitle className="text-lg font-bold mb-4 text-background">
+              ユーザーメニュー
+            </DialogTitle>
+            <p className="mb-4 text-background">{user?.user_metadata?.name}さん</p>
             <LogoutButton />
           </motion.div>
         </Dialog>
