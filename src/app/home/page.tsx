@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { PageTitle } from '@/components/PageTitle';
 
 export default function HomePage() {
   const [user, setUser] = useState<any>(null);
@@ -22,7 +23,7 @@ export default function HomePage() {
 
   return (
     <>
-      <div>ようこそ、{user.email}さん！</div>
+      <PageTitle>ホーム</PageTitle>
     </>
   );
 }

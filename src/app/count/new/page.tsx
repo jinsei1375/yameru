@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { CountForm } from '@/components/CountForm';
 import { Count, DbCountInsert, toDbCountInsert } from '@/types/Count';
+import { PageTitle } from '@/components/PageTitle';
 
 export default function NewCountPage() {
   const { user, loading } = useAuth();
@@ -46,7 +47,7 @@ export default function NewCountPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">新しいカウントを作成</h1>
+      <PageTitle>新しいカウントを作成</PageTitle>
       <CountForm onSubmit={handleSubmit} />
     </div>
   );

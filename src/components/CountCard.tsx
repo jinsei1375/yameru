@@ -1,5 +1,6 @@
 import { Count } from '@/types/Count';
 import { DurationCounter } from './DurationCounter';
+import Link from 'next/link';
 
 type Props = {
   count: Count;
@@ -17,25 +18,27 @@ export function CountCard({ count }: Props) {
   const progress = Math.min(100, Math.floor((daysPassed / totalDuration) * 100));
 
   return (
-    <div className="bg-white rounded-2xl shadow p-4 border">
-      <div className="flex justify-between items-center mb-2">
-        <h2 className="text-lg font-semibold text-gray-700">{count.title}</h2>
-        <span className="text-sm text-gray-500">残り{daysLeft}日</span>
-      </div>
-      <p className="text-sm text-gray-700">
-        <DurationCounter startDate={count.startDate} />
-      </p>
-      {count.saveMoneyPerMonth && (
+    <Link href={`/count/${count.id}/edit`} className="block">
+      <div className="bg-white rounded-2xl shadow p-4 border">
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-lg font-semibold text-gray-700">{count.title}</h2>
+          <span className="text-sm text-gray-500">残り{daysLeft}日</span>
+        </div>
         <p className="text-sm text-gray-700">
-          月 {count.saveMoneyPerMonth.toLocaleString()} 円節約中
+          <DurationCounter startDate={count.startDate} />
         </p>
-      )}
-      {count.saveTimePerMonth && (
-        <p className="text-sm text-gray-700">月 {count.saveTimePerMonth} 時間節約中</p>
-      )}
-      <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
-        <div className="bg-yellow-400 h-2 rounded-full" style={{ width: `${progress}%` }}></div>
+        {count.saveMoneyPerMonth && (
+          <p className="text-sm text-gray-700">
+            月 {count.saveMoneyPerMonth.toLocaleString()} 円節約中
+          </p>
+        )}
+        {count.saveTimePerMonth && (
+          <p className="text-sm text-gray-700">月 {count.saveTimePerMonth} 時間節約中</p>
+        )}
+        <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+          <div className="bg-yellow-400 h-2 rounded-full" style={{ width: `${progress}%` }}></div>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }

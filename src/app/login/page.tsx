@@ -1,10 +1,13 @@
 import GoogleSignInButton from '@/components/GooleSignInButton';
+import { PageTitle } from '@/components/PageTitle';
 
 export default function LoginPage() {
   return (
-    <div className="flex flex-col items-center justify-center h-screen px-4">
-      <h1 className="text-2xl font-bold mb-6">Yameru にログイン</h1>
-      <GoogleSignInButton />
-    </div>
+    <>
+      <PageTitle>ログイン</PageTitle>
+      <div className="flex justify-center">
+        <GoogleSignInButton />
+      </div>
+    </>
   );
 }
