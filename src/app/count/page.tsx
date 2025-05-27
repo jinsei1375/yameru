@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { toCount } from '@/types/Count';
 import { CountCard } from '@/components/CountCard';
+import { NavButton } from '@/components/NavButton';
 
 export default async function CountListPage() {
   const supabase = await createClient();
@@ -20,6 +21,7 @@ export default async function CountListPage() {
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">カウント一覧</h1>
+      <NavButton href="/count/new" label="カウントを追加" className="mb-4" />
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
         {counts.map((count) => (
           <CountCard key={count.id} count={count} />

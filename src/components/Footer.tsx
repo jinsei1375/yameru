@@ -14,7 +14,7 @@ export function Footer() {
   return (
     <footer className="fixed bottom-0 left-0 right-0 flex justify-around bg-gray-100 p-3 border-t">
       {navItems.map(({ href, label, icon: Icon }) => {
-        const isActive = pathname === href;
+        const isActive = pathname === href || pathname.startsWith(`${href}/`);
         return (
           <Link
             key={href}
