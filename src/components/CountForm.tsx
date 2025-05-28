@@ -1,6 +1,24 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const countFormSchema = z.object({
+  title: z.string().min(1, 'カウント名は必須です'),
+  startDate: z.string().min(1, '開始日は必須です'),
+  goalDate: z.string().min(1, 'ゴール日は必須です'),
+  saveTimePerMonth: z
+    .string()
+    .optional()
+    .refine((val) => val === '' || !isNaN(Number(val)), '数値で入力してください'),
+  saveMoneyPerMonth: z
+    .string()
+    .optional()
+    .refine((val) => val === '' || !isNaN(Number(val)), '数値で入力してください'),
+});
+
+type CountFormValues = z.infer<typeof countFormSchema>;
 
 type CountFormProps = {
   initialValues?: {
@@ -21,85 +39,92 @@ type CountFormProps = {
 };
 
 export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) {
-  const [title, setTitle] = useState(initialValues?.title ?? '');
-  const [startDate, setStartDate] = useState(initialValues?.startDate ?? '');
-  const [goalDate, setGoalDate] = useState(initialValues?.goalDate ?? '');
-  const [saveTime, setSaveTime] = useState(initialValues?.saveTimePerMonth?.toString() ?? '');
-  const [saveMoney, setSaveMoney] = useState(initialValues?.saveMoneyPerMonth?.toString() ?? '');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CountFormValues>({
+    resolver: zodResolver(countFormSchema),
+    defaultValues: {
+      title: initialValues?.title ?? '',
+      startDate: initialValues?.startDate ?? '',
+      goalDate: initialValues?.goalDate ?? '',
+      saveTimePerMonth: initialValues?.saveTimePerMonth?.toString() ?? '',
+      saveMoneyPerMonth: initialValues?.saveMoneyPerMonth?.toString() ?? '',
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onValid = async (data: CountFormValues) => {
     await onSubmit({
-      title,
-      startDate,
-      goalDate,
-      saveTimePerMonth: saveTime ? Number(saveTime) : undefined,
-      saveMoneyPerMonth: saveMoney ? Number(saveMoney) : undefined,
+      title: data.title,
+      startDate: data.startDate,
+      goalDate: data.goalDate,
+      saveTimePerMonth: data.saveTimePerMonth ? Number(data.saveTimePerMonth) : undefined,
+      saveMoneyPerMonth: data.saveMoneyPerMonth ? Number(data.saveMoneyPerMonth) : undefined,
     });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit(onValid)} className="space-y-4">
       <div>
         <label className="block text-sm font-medium">カウント名</label>
-        <input
-          type="text"
-          required
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full border rounded p-2"
-        />
+        <input {...register('title')} className="w-full border rounded p-2" />
+        {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
       </div>
 
       <div>
         <label className="block text-sm font-medium">開始日</label>
-        <input
-          type="date"
-          required
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          className="w-full border rounded p-2"
-        />
+        <input type="date" {...register('startDate')} className="w-full border rounded p-2" />
+        {errors.startDate && <p className="text-red-500 text-sm">{errors.startDate.message}</p>}
       </div>
 
       <div>
         <label className="block text-sm font-medium">ゴール日</label>
-        <input
-          type="date"
-          required
-          value={goalDate}
-          onChange={(e) => setGoalDate(e.target.value)}
-          className="w-full border rounded p-2"
-        />
+        <input type="date" {...register('goalDate')} className="w-full border rounded p-2" />
+        {errors.goalDate && <p className="text-red-500 text-sm">{errors.goalDate.message}</p>}
       </div>
 
       <div>
         <label className="block text-sm font-medium">1ヶ月でセーブする時間（分）</label>
         <input
           type="number"
-          value={saveTime}
-          onChange={(e) => setSaveTime(e.target.value)}
+          {...register('saveTimePerMonth')}
           className="w-full border rounded p-2"
         />
+        {errors.saveTimePerMonth && (
+          <p className="text-red-500 text-sm">{errors.saveTimePerMonth.message}</p>
+        )}
       </div>
 
       <div>
         <label className="block text-sm font-medium">1ヶ月でセーブする金額（円）</label>
         <input
           type="number"
-          value={saveMoney}
-          onChange={(e) => setSaveMoney(e.target.value)}
+          {...register('saveMoneyPerMonth')}
           className="w-full border rounded p-2"
         />
+        {errors.saveMoneyPerMonth && (
+          <p className="text-red-500 text-sm">{errors.saveMoneyPerMonth.message}</p>
+        )}
       </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-yellow-500 text-white py-2 rounded font-bold"
-      >
-        {loading ? '保存中...' : '保存'}
-      </button>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          disabled={loading}
+          className="w-full bg-gray-300 text-gray-700 py-2 rounded font-bold"
+          onClick={() => window.history.back()}
+        >
+          キャンセル
+        </button>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-yellow-500 text-white py-2 rounded font-bold"
+        >
+          {loading ? '保存中...' : '保存'}
+        </button>
+      </div>
     </form>
   );
 }
