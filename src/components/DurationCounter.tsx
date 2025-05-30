@@ -17,13 +17,16 @@ export function DurationCounter({ startDate }: { startDate: Date | string }) {
 
   if (elapsed === null) return null; // 初期描画では何も出さない（SSR対策）
 
-  const seconds = Math.floor(elapsed / 1000) % 60;
-  const minutes = Math.floor(elapsed / (1000 * 60)) % 60;
-  const hours = Math.floor(elapsed / (1000 * 60 * 60));
+  const totalSeconds = Math.floor(elapsed / 1000);
+  const days = Math.floor(totalSeconds / (60 * 60 * 24));
+  const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+  const seconds = totalSeconds % 60;
 
   return (
     <span>
-      継続中：{hours}時間{minutes}分{seconds}秒
+      継続中：{days > 0 && <>{days}日</>}
+      {hours}時間{minutes}分{seconds}秒
     </span>
   );
 }

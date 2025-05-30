@@ -68,19 +68,27 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
     <form onSubmit={handleSubmit(onValid)} className="space-y-4">
       <div>
         <label className="block text-sm font-medium">カウント名</label>
-        <input {...register('title')} className="w-full border rounded p-2" />
+        <input {...register('title')} className="w-full border rounded p-2 text-gray-900" />
         {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
       </div>
 
       <div>
         <label className="block text-sm font-medium">開始日</label>
-        <input type="date" {...register('startDate')} className="w-full border rounded p-2" />
+        <input
+          type="date"
+          {...register('startDate')}
+          className="w-full border rounded p-2 text-gray-900"
+        />
         {errors.startDate && <p className="text-red-500 text-sm">{errors.startDate.message}</p>}
       </div>
 
       <div>
         <label className="block text-sm font-medium">ゴール日</label>
-        <input type="date" {...register('goalDate')} className="w-full border rounded p-2" />
+        <input
+          type="date"
+          {...register('goalDate')}
+          className="w-full border rounded p-2 text-gray-900"
+        />
         {errors.goalDate && <p className="text-red-500 text-sm">{errors.goalDate.message}</p>}
       </div>
 
@@ -89,7 +97,7 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
         <input
           type="number"
           {...register('saveTimePerMonth')}
-          className="w-full border rounded p-2"
+          className="w-full border rounded p-2 text-gray-900"
         />
         {errors.saveTimePerMonth && (
           <p className="text-red-500 text-sm">{errors.saveTimePerMonth.message}</p>
@@ -101,7 +109,7 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
         <input
           type="number"
           {...register('saveMoneyPerMonth')}
-          className="w-full border rounded p-2"
+          className="w-full border rounded p-2 text-gray-900"
         />
         {errors.saveMoneyPerMonth && (
           <p className="text-red-500 text-sm">{errors.saveMoneyPerMonth.message}</p>

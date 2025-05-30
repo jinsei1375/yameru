@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { DurationCounter } from './DurationCounter';
 import { CountForm } from './CountForm';
 import { createClient } from '@/lib/supabase/client';
+import { ConfirmModal } from './ConfirmModal';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   count: Count;
@@ -14,7 +16,29 @@ export default function EditCountClient({ count }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [localCount, setLocalCount] = useState(count);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+  const router = useRouter();
+
+  // 削除処理
+  const handleDelete = async () => {
+    setLoading(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.from('count_items').delete().eq('id', count.id);
+      if (error) {
+        console.error('削除に失敗:', error);
+        alert('削除に失敗しました。');
+        return;
+      }
+      router.push('/count'); // 削除後はカウント一覧にリダイレクト
+    } finally {
+      setLoading(false);
+      setIsDeleteModalOpen(false);
+    }
+  };
+
+  // 保存処理
   const handleSubmit = async (values: {
     title: string;
     startDate: string;
@@ -73,12 +97,27 @@ export default function EditCountClient({ count }: Props) {
             ? `${localCount.saveMoneyPerMonth.toLocaleString()}円`
             : '未設定'}
         </p>
-        <button
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-          onClick={() => setIsEditing(true)}
-        >
-          編集
-        </button>
+        <div className="mt-6 flex justify-center gap-4">
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded w-full max-w-[120px]"
+            onClick={() => setIsEditing(true)}
+          >
+            編集
+          </button>
+          <button
+            className="px-4 py-2 bg-red-500 text-white rounded w-full max-w-[120px]"
+            onClick={() => setIsDeleteModalOpen(true)}
+          >
+            削除
+          </button>
+          <ConfirmModal
+            isOpen={isDeleteModalOpen}
+            title="カウントの削除"
+            message="このカウントを削除してもよろしいですか？"
+            onConfirm={handleDelete}
+            onCancel={() => setIsDeleteModalOpen(false)}
+          />
+        </div>
       </div>
     );
   } else {
