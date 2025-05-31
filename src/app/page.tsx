@@ -1,7 +1,15 @@
+import ConceptSection from '@/components/top/ConceptSection';
+import CTASection from '@/components/top/CTASection';
+import FeaturesSection from '@/components/top/FeaturesSection';
+import HeroSection from '@/components/top/HeroSection';
+
 export default function Home() {
   return (
-    <main className="p-4">
-      <h1 className="text-xl font-bold">Yameru</h1>
-    </main>
+    <div className="space-y-16">
+      <HeroSection />
+      <ConceptSection />
+      <FeaturesSection />
+      <CTASection />
+    </div>
   );
 }

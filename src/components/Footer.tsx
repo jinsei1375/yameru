@@ -9,8 +9,13 @@ const navItems = [
   { href: '/count', label: 'カウント', icon: Clock },
   { href: '/urges', label: '衝動ログ', icon: Zap },
 ];
+
+const excludedPaths = ['/login', '/register', '/'];
 export function Footer() {
   const pathname = usePathname();
+  if (pathname && excludedPaths.includes(pathname)) {
+    return null; // ログイン・登録画面ではフッターを表示しない
+  }
   return (
     <footer className="fixed bottom-0 left-0 right-0 flex justify-around bg-gray-100 p-3 border-t">
       {navItems.map(({ href, label, icon: Icon }) => {
