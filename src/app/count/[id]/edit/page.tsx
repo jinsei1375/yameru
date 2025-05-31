@@ -11,7 +11,7 @@ type PageProps = {
 
 export default async function CountEditPage({ params }: PageProps) {
   const supabase = await createClient();
-  const { id } = await params;
+  const { id } = params;
   const { data: count, error } = await supabase
     .from('count_items')
     .select('*')
