@@ -4,7 +4,12 @@ import { createClient } from '@/lib/supabase/server';
 import { toCount } from '@/types/Count';
 import { notFound } from 'next/navigation';
 
-export default async function CountEditPage({ params }: { params: { id: string } }) {
+type PageProps = {
+  params: { id: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
+
+export default async function CountEditPage({ params }: PageProps) {
   const supabase = await createClient();
   const { id } = await params;
   const { data: count, error } = await supabase
