@@ -5,6 +5,7 @@ import { MenuModal } from '@/components/MenuModal';
 import { useUI } from '@/contexts/UIContext';
 import { NavButton } from '@/components/NavButton';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Header() {
   const { user } = useAuth();
@@ -20,10 +21,12 @@ export function Header() {
 
       {user ? (
         <button onClick={() => openUserMenu()} className="flex items-center space-x-4">
-          <img
+          <Image
             src={user.user_metadata?.avatar_url || '/default-avatar.png'}
             alt="User avatar"
             className="w-8 h-8 rounded-full cursor-pointer"
+            width={32}
+            height={32}
           />
         </button>
       ) : (

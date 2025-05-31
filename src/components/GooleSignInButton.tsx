@@ -23,7 +23,7 @@ export default function GoogleSignInButton() {
         router.push('/home'); // セッションがあれば強制リダイレクト
       }
     });
-  }, []);
+  }, [router, supabase]);
 
   return (
     <button

@@ -4,14 +4,10 @@ import { createClient } from '@/lib/supabase/server';
 import { toCount } from '@/types/Count';
 import { notFound } from 'next/navigation';
 
-type PageProps = {
-  params: { id: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
-};
-
-export default async function CountEditPage({ params }: PageProps) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default async function CountEditPage({ params }: any) {
   const supabase = await createClient();
-  const { id } = params;
+  const { id } = await params;
   const { data: count, error } = await supabase
     .from('count_items')
     .select('*')
