@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { href: '/', label: 'ホーム', icon: Home },
-  { href: '/urges', label: '衝動ログ', icon: Zap },
+  { href: '/home', label: 'ホーム', icon: Home },
   { href: '/count', label: 'カウント', icon: Clock },
+  { href: '/urges', label: '衝動ログ', icon: Zap },
 ];
 export function Footer() {
   const pathname = usePathname();

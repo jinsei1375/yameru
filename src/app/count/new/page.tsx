@@ -6,10 +6,12 @@ import { createClient } from '@/lib/supabase/client';
 import { CountForm } from '@/components/CountForm';
 import { Count, DbCountInsert, toDbCountInsert } from '@/types/Count';
 import { PageTitle } from '@/components/PageTitle';
+import { useUI } from '@/contexts/UIContext';
 
 export default function NewCountPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const { showNotification } = useUI();
 
   if (loading) return <p>読み込み中...</p>;
   if (!user) return <p>ログインが必要です</p>; // middlewareで弾かれてるはずだけど念のため
@@ -38,10 +40,11 @@ export default function NewCountPage() {
 
     if (error) {
       console.error('カウントの作成に失敗:', error);
-      alert('カウントの作成に失敗しました。もう一度お試しください。');
+      showNotification('カウントの作成に失敗しました', 'error');
       return;
+    } else {
+      showNotification('カウントを作成しました', 'success');
     }
-
     router.push('/count');
   };
 

@@ -1,29 +1,14 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { NavButton } from '@/components/NavButton';
 import { PageTitle } from '@/components/PageTitle';
 
 export default function HomePage() {
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    const getUser = async () => {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-    };
-
-    getUser();
-  }, []);
-
-  if (!user) return <p>Loading...</p>;
-
   return (
     <>
       <PageTitle>ホーム</PageTitle>
+      <p className="mt-8 text-center mb-8">今日もコツコツ続けていきましょう！</p>
+      <div className="flex justify-center mb-4">
+        <NavButton href="/count/" label="カウント一覧" />
+      </div>
     </>
   );
 }

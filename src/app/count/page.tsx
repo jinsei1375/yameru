@@ -22,7 +22,9 @@ export default async function CountListPage() {
   return (
     <div className="p-4">
       <PageTitle>カウント一覧</PageTitle>
-      <NavButton href="/count/new" label="カウントを追加" className="mb-4" />
+      <div className="flex justify-end mb-4">
+        <NavButton href="/count/new" label="カウントを追加" />
+      </div>
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
         {counts.map((count) => (
           <CountCard key={count.id} count={count} />

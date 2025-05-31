@@ -7,6 +7,7 @@ import { CountForm } from './CountForm';
 import { createClient } from '@/lib/supabase/client';
 import { ConfirmModal } from './ConfirmModal';
 import { useRouter } from 'next/navigation';
+import { useUI } from '@/contexts/UIContext';
 
 type Props = {
   count: Count;
@@ -17,6 +18,7 @@ export default function EditCountClient({ count }: Props) {
   const [loading, setLoading] = useState(false);
   const [localCount, setLocalCount] = useState(count);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const { showNotification } = useUI();
 
   const router = useRouter();
 
@@ -32,6 +34,7 @@ export default function EditCountClient({ count }: Props) {
         return;
       }
       router.push('/count'); // 削除後はカウント一覧にリダイレクト
+      showNotification('削除しました', 'success');
     } finally {
       setLoading(false);
       setIsDeleteModalOpen(false);
@@ -74,6 +77,7 @@ export default function EditCountClient({ count }: Props) {
       } else {
         setLocalCount(updatedCount);
         setIsEditing(false);
+        showNotification('保存に成功しました！', 'success');
       }
     } finally {
       setLoading(false);

@@ -5,6 +5,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { UIProvider } from '@/contexts/UIContext';
+import { NotificationBar } from '@/components/NotificationBar';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background`}>
         <AuthProvider>
           <UIProvider>
+            <NotificationBar />
             <Header />
             <main className="p-4">{children}</main>
             <Footer />
