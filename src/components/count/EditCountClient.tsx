@@ -2,10 +2,10 @@
 
 import { Count } from '@/interfaces/Count';
 import { useState } from 'react';
-import { DurationCounter } from './DurationCounter';
-import { CountForm } from './CountForm';
+import { DurationCounter } from '@/components/count/DurationCounter';
+import { CountForm } from '@/components/count/CountForm';
 import { createClient } from '@/lib/supabase/client';
-import { ConfirmModal } from './ConfirmModal';
+import { ConfirmModal } from '@/components/ConfirmModal';
 import { useRouter } from 'next/navigation';
 import { useUI } from '@/contexts/UIContext';
 

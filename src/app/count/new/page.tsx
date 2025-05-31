@@ -3,7 +3,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { CountForm } from '@/components/CountForm';
+import { CountForm } from '@/components/count/CountForm';
 import { Count, DbCountInsert, toDbCountInsert } from '@/types/Count';
 import { PageTitle } from '@/components/PageTitle';
 import { useUI } from '@/contexts/UIContext';

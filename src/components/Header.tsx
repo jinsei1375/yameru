@@ -1,8 +1,6 @@
 'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
-import LogoutButton from './LogoutBtn';
-import { useState } from 'react';
 import { MenuModal } from './MenuModal';
 import { useUI } from '@/contexts/UIContext';
 

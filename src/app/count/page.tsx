@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { toCount } from '@/types/Count';
-import { CountCard } from '@/components/CountCard';
+import { CountCard } from '@/components/count/CountCard';
 import { NavButton } from '@/components/NavButton';
 import { PageTitle } from '@/components/PageTitle';
 

@@ -1,4 +1,4 @@
-import EditCountClient from '@/components/EditCountClient';
+import EditCountClient from '@/components/count/EditCountClient';
 import { PageTitle } from '@/components/PageTitle';
 import { createClient } from '@/lib/supabase/server';
 import { toCount } from '@/types/Count';

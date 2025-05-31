@@ -1,5 +1,5 @@
 import { Count } from '@/types/Count';
-import { DurationCounter } from './DurationCounter';
+import { DurationCounter } from '@/components/count/DurationCounter';
 import Link from 'next/link';
 
 type Props = {
