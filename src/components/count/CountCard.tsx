@@ -2,8 +2,7 @@
 import { Count } from '@/types/Count';
 import { DurationCounter } from '@/components/count/DurationCounter';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { useEffect } from 'react';
 import { useUI } from '@/contexts/UIContext';
 
 type Props = {
@@ -13,12 +12,10 @@ type Props = {
 export function CountCard({ count }: Props) {
   const router = useRouter();
   const { setLoading: setGlobalLoading } = useUI();
-  const [isNavigating, setIsNavigating] = useState(false);
 
   // コンポーネントアンマウント時にローディングを解除
   useEffect(() => {
     return () => {
-      setIsNavigating(false);
       setGlobalLoading(false);
     };
   }, [setGlobalLoading]);
@@ -34,7 +31,6 @@ export function CountCard({ count }: Props) {
   const progress = Math.min(100, Math.floor((daysPassed / totalDuration) * 100));
 
   const handleClick = () => {
-    setIsNavigating(true);
     setGlobalLoading(true);
     router.push(`/count/${count.id}/edit`);
   };
