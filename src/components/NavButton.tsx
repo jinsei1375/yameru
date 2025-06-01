@@ -1,5 +1,4 @@
 'use client';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
@@ -35,7 +34,7 @@ export function NavButton({ href, label, className = '' }: NavButtonProps) {
     <button
       onClick={handleClick}
       disabled={isNavigating}
-      className={`inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center ${className}`}
+      className={`bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center ${className}`}
     >
       {isNavigating ? (
         <>
