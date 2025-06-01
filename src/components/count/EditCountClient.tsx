@@ -18,13 +18,14 @@ export default function EditCountClient({ count }: Props) {
   const [loading, setLoading] = useState(false);
   const [localCount, setLocalCount] = useState(count);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const { showNotification } = useUI();
+  const { showNotification, setLoading: setGlobalLoading } = useUI();
 
   const router = useRouter();
 
   // 削除処理
   const handleDelete = async () => {
     setLoading(true);
+    setGlobalLoading(true);
     try {
       const supabase = createClient();
       const { error } = await supabase.from('count_items').delete().eq('id', count.id);
@@ -37,6 +38,7 @@ export default function EditCountClient({ count }: Props) {
       showNotification('削除しました', 'success');
     } finally {
       setLoading(false);
+      setGlobalLoading(false);
       setIsDeleteModalOpen(false);
     }
   };
@@ -50,6 +52,7 @@ export default function EditCountClient({ count }: Props) {
     saveMoneyPerMonth?: number;
   }) => {
     setLoading(true);
+    setGlobalLoading(true);
     try {
       const supabase = createClient();
       const updatedCount: Count = {
@@ -81,6 +84,7 @@ export default function EditCountClient({ count }: Props) {
       }
     } finally {
       setLoading(false);
+      setGlobalLoading(false);
     }
   };
 

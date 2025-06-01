@@ -3,6 +3,8 @@ import { toCount } from '@/types/Count';
 import { CountCard } from '@/components/count/CountCard';
 import { NavButton } from '@/components/NavButton';
 import { PageTitle } from '@/components/PageTitle';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { Suspense } from 'react';
 
 export default async function CountListPage() {
   const supabase = await createClient();
@@ -25,11 +27,13 @@ export default async function CountListPage() {
       <div className="flex justify-end mb-4">
         <NavButton href="/count/new" label="カウントを追加" />
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {counts.map((count) => (
-          <CountCard key={count.id} count={count} />
-        ))}
-      </div>
+      <Suspense fallback={<LoadingSpinner size="lg" message="カウントを読み込み中..." />}>
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+          {counts.map((count) => (
+            <CountCard key={count.id} count={count} />
+          ))}
+        </div>
+      </Suspense>
     </div>
   );
 }

@@ -19,6 +19,8 @@ type UIContextType = {
   notification: Notification;
   showNotification: (message: string, type?: NotificationType) => void;
   clearNotification: () => void;
+  isLoading: boolean;
+  setLoading: (loading: boolean) => void;
 };
 
 const UIContext = createContext<UIContextType | null>(null);
@@ -26,6 +28,7 @@ const UIContext = createContext<UIContextType | null>(null);
 export const UIProvider = ({ children }: Props) => {
   const [isUserMenuOpen, setUserMenuOpen] = useState(false);
   const [notification, setNotification] = useState<Notification>(null);
+  const [isLoading, setLoading] = useState(false);
 
   const openUserMenu = () => setUserMenuOpen(true);
   const closeUserMenu = () => setUserMenuOpen(false);
@@ -44,6 +47,8 @@ export const UIProvider = ({ children }: Props) => {
         notification,
         showNotification,
         clearNotification,
+        isLoading,
+        setLoading,
       }}
     >
       {children}

@@ -3,6 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 const countFormSchema = z.object({
   title: z.string().min(1, 'カウント名は必須です'),
@@ -128,9 +129,16 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-yellow-500 text-white py-2 rounded font-bold"
+          className="w-full bg-yellow-500 text-white py-2 rounded font-bold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
         >
-          {loading ? '保存中...' : '保存'}
+          {loading ? (
+            <>
+              <LoadingSpinner size="sm" color="white" />
+              <span className="ml-2">保存中...</span>
+            </>
+          ) : (
+            '保存'
+          )}
         </button>
       </div>
     </form>

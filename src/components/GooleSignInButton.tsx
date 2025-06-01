@@ -2,19 +2,26 @@
 
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function GoogleSignInButton() {
   const supabase = createClient();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${location.origin}/api/auth/callback`,
-      },
-    });
+    setIsLoading(true);
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${location.origin}/api/auth/callback`,
+        },
+      });
+    } catch (error) {
+      console.error('ログインエラー:', error);
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -28,7 +35,8 @@ export default function GoogleSignInButton() {
   return (
     <button
       onClick={handleLogin}
-      className="gsi-material-button flex items-center justify-start px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 transition"
+      disabled={isLoading}
+      className="gsi-material-button flex items-center justify-start px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <div className="gsi-material-button-icon mr-3">
         <svg
@@ -57,7 +65,7 @@ export default function GoogleSignInButton() {
         </svg>
       </div>
       <span className="gsi-material-button-contents text-sm font-medium text-gray-700">
-        Sign in with Google
+        {isLoading ? 'サインイン中...' : 'Sign in with Google'}
       </span>
     </button>
   );

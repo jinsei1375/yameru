@@ -18,7 +18,7 @@ export default function HeroSection() {
       </p>
       <div className="mt-10">
         <Link
-          href="/signup"
+          href="/login"
           className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-full shadow transition"
         >
           はじめてみる
