@@ -1,12 +1,28 @@
+'use client';
 import { Count } from '@/types/Count';
 import { DurationCounter } from '@/components/count/DurationCounter';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { useUI } from '@/contexts/UIContext';
 
 type Props = {
   count: Count;
 };
 
 export function CountCard({ count }: Props) {
+  const router = useRouter();
+  const { setLoading: setGlobalLoading } = useUI();
+  const [isNavigating, setIsNavigating] = useState(false);
+
+  // コンポーネントアンマウント時にローディングを解除
+  useEffect(() => {
+    return () => {
+      setIsNavigating(false);
+      setGlobalLoading(false);
+    };
+  }, [setGlobalLoading]);
+
   const now = new Date();
   const daysPassed = Math.floor(
     (now.getTime() - count.startDate.getTime()) / (1000 * 60 * 60 * 24)
@@ -17,9 +33,15 @@ export function CountCard({ count }: Props) {
   );
   const progress = Math.min(100, Math.floor((daysPassed / totalDuration) * 100));
 
+  const handleClick = () => {
+    setIsNavigating(true);
+    setGlobalLoading(true);
+    router.push(`/count/${count.id}/edit`);
+  };
+
   return (
-    <Link href={`/count/${count.id}/edit`} className="block">
-      <div className="bg-white rounded-2xl shadow p-4 border">
+    <div onClick={handleClick} className="block cursor-pointer">
+      <div className="bg-white rounded-2xl shadow p-4 border hover:shadow-lg transition-shadow">
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-lg font-semibold text-gray-700">{count.title}</h2>
           <span className="text-sm text-gray-500">残り{daysLeft}日</span>
@@ -39,6 +61,6 @@ export function CountCard({ count }: Props) {
           <div className="bg-yellow-400 h-2 rounded-full" style={{ width: `${progress}%` }}></div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

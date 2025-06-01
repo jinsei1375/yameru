@@ -1,7 +1,7 @@
 'use client';
 
 import { Count } from '@/interfaces/Count';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DurationCounter } from '@/components/count/DurationCounter';
 import { CountForm } from '@/components/count/CountForm';
 import { createClient } from '@/lib/supabase/client';
@@ -21,6 +21,11 @@ export default function EditCountClient({ count }: Props) {
   const { showNotification, setLoading: setGlobalLoading } = useUI();
 
   const router = useRouter();
+
+  // コンポーネントマウント時にローディングを解除
+  useEffect(() => {
+    setGlobalLoading(false);
+  }, [setGlobalLoading]);
 
   // 削除処理
   const handleDelete = async () => {
