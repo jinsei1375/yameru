@@ -62,13 +62,13 @@ export function calculateProgressJST(startDate: Date | string, goalDate: Date | 
 
 /**
  * 日本時間での経過時間を計算（ミリ秒）
+ * 開始日は日本時間の0時として計算
  */
 export function calculateElapsedTimeJST(startDate: Date | string): number {
   const now = getNowJST();
-  const start = typeof startDate === 'string' ? new Date(startDate) : startDate;
-  // 開始日時を日本時間に調整
-  const jstStart = new Date(start.getTime() + JST_OFFSET);
-  return now.getTime() - jstStart.getTime();
+  // 開始日を日本時間の0時に正規化
+  const jstStartDate = toJSTDate(startDate);
+  return now.getTime() - jstStartDate.getTime();
 }
 
 /**
