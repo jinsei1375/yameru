@@ -5,19 +5,44 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 
-const countFormSchema = z.object({
-  title: z.string().min(1, 'カウント名は必須です'),
-  startDate: z.string().min(1, '開始日は必須です'),
-  goalDate: z.string().min(1, 'ゴール日は必須です'),
-  saveTimePerMonth: z
-    .string()
-    .optional()
-    .refine((val) => val === '' || !isNaN(Number(val)), '数値で入力してください'),
-  saveMoneyPerMonth: z
-    .string()
-    .optional()
-    .refine((val) => val === '' || !isNaN(Number(val)), '数値で入力してください'),
-});
+const countFormSchema = z
+  .object({
+    title: z.string().min(1, 'カウント名は必須です'),
+    startDate: z.string().min(1, '開始日は必須です'),
+    goalDate: z.string().min(1, 'ゴール日は必須です'),
+    saveTimePerMonth: z
+      .string()
+      .optional()
+      .refine((val) => val === '' || !isNaN(Number(val)), '数値で入力してください'),
+    saveMoneyPerMonth: z
+      .string()
+      .optional()
+      .refine((val) => val === '' || !isNaN(Number(val)), '数値で入力してください'),
+  })
+  .refine(
+    (data) => {
+      // ゴール日が開始日より後であることを確認
+      const startDate = new Date(data.startDate);
+      const goalDate = new Date(data.goalDate);
+      return goalDate >= startDate;
+    },
+    {
+      message: 'ゴール日は開始日以降の日付を選択してください',
+      path: ['goalDate'], // エラーを表示するフィールド
+    }
+  )
+  .refine(
+    (data) => {
+      // saveTimePerMonthまたはsaveMoneyPerMonthのどちらかが入力されていることを確認
+      const hasTimeValue = data.saveTimePerMonth && data.saveTimePerMonth.trim() !== '';
+      const hasMoneyValue = data.saveMoneyPerMonth && data.saveMoneyPerMonth.trim() !== '';
+      return hasTimeValue || hasMoneyValue;
+    },
+    {
+      message: '節約時間または節約金額のどちらか一方は入力してください',
+      path: ['saveTimePerMonth'], // エラーを表示するフィールド（どちらでも良いので時間の方に表示）
+    }
+  );
 
 type CountFormValues = z.infer<typeof countFormSchema>;
 
@@ -99,6 +124,7 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
           type="number"
           {...register('saveTimePerMonth')}
           className="w-full border rounded p-2 text-gray-900"
+          placeholder="例: 60"
         />
         {errors.saveTimePerMonth && (
           <p className="text-red-500 text-sm">{errors.saveTimePerMonth.message}</p>
@@ -111,6 +137,7 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
           type="number"
           {...register('saveMoneyPerMonth')}
           className="w-full border rounded p-2 text-gray-900"
+          placeholder="例: 5000"
         />
         {errors.saveMoneyPerMonth && (
           <p className="text-red-500 text-sm">{errors.saveMoneyPerMonth.message}</p>
