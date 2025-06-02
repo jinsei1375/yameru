@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase/client';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { useRouter } from 'next/navigation';
 import { useUI } from '@/contexts/UIContext';
+import { toLocaleDateStringJST } from '@/lib/dateUtils';
 
 type Props = {
   count: Count;
@@ -97,9 +98,9 @@ export default function EditCountClient({ count }: Props) {
     return (
       <div>
         <p>タイトル: {localCount.title}</p>
-        <p>開始日: {new Date(localCount.startDate).toLocaleDateString()}</p>
+        <p>開始日: {toLocaleDateStringJST(localCount.startDate)}</p>
         <DurationCounter startDate={localCount.startDate} />
-        <p>目標日: {new Date(localCount.goalDate).toLocaleDateString()}</p>
+        <p>目標日: {toLocaleDateStringJST(localCount.goalDate)}</p>
         <p>
           セーブ時間/月:{' '}
           {localCount.saveTimePerMonth ? `${localCount.saveTimePerMonth}分` : '未設定'}

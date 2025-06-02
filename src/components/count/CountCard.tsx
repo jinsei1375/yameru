@@ -4,6 +4,7 @@ import { DurationCounter } from '@/components/count/DurationCounter';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useUI } from '@/contexts/UIContext';
+import { calculateDaysLeftJST, calculateProgressJST } from '@/lib/dateUtils';
 
 type Props = {
   count: Count;
@@ -20,15 +21,9 @@ export function CountCard({ count }: Props) {
     };
   }, [setGlobalLoading]);
 
-  const now = new Date();
-  const daysPassed = Math.floor(
-    (now.getTime() - count.startDate.getTime()) / (1000 * 60 * 60 * 24)
-  );
-  const daysLeft = Math.ceil((count.goalDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-  const totalDuration = Math.ceil(
-    (count.goalDate.getTime() - count.startDate.getTime()) / (1000 * 60 * 60 * 24)
-  );
-  const progress = Math.min(100, Math.floor((daysPassed / totalDuration) * 100));
+  // 日本時間基準での日数計算
+  const daysLeft = calculateDaysLeftJST(count.goalDate);
+  const progress = calculateProgressJST(count.startDate, count.goalDate);
 
   const handleClick = () => {
     setGlobalLoading(true);

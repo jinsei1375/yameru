@@ -1,19 +1,17 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { calculateElapsedTimeJST } from '@/lib/dateUtils';
 
 export function DurationCounter({ startDate }: { startDate: Date | string }) {
-  const startTime =
-    typeof startDate === 'string' ? new Date(startDate).getTime() : startDate.getTime();
-
   const [elapsed, setElapsed] = useState<number | null>(null); // 初期はnull
 
   useEffect(() => {
-    const update = () => setElapsed(Date.now() - startTime);
+    const update = () => setElapsed(calculateElapsedTimeJST(startDate));
     update(); // 初回更新
 
     const intervalId = setInterval(update, 1000);
     return () => clearInterval(intervalId);
-  }, [startTime]);
+  }, [startDate]);
 
   if (elapsed === null) return null; // 初期描画では何も出さない（SSR対策）
 
