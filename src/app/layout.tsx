@@ -36,7 +36,7 @@ export default function RootLayout({
             <GlobalLoading />
             <NotificationBar />
             <Header />
-            <main className="p-4">{children}</main>
+            <main className="p-4 pb-16">{children}</main>
             <Footer />
           </UIProvider>
         </AuthProvider>

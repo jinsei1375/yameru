@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { CountForm } from '@/components/count/CountForm';
-import { Count, DbCountInsert, toDbCountInsert } from '@/types/Count';
+import { Count, DbCountInsert, toDbCountInsert } from '@/interfaces/Count';
 import { PageTitle } from '@/components/PageTitle';
 import { useUI } from '@/contexts/UIContext';
 import { useState } from 'react';
@@ -24,6 +24,8 @@ export default function NewCountPage() {
     goalDate: string;
     saveTimePerMonth?: number;
     saveMoneyPerMonth?: number;
+    reason?: string;
+    commitment?: string;
   }) => {
     setIsSubmitting(true);
     setGlobalLoading(true);
@@ -38,6 +40,8 @@ export default function NewCountPage() {
         goalDate: new Date(values.goalDate),
         saveTimePerMonth: values.saveTimePerMonth,
         saveMoneyPerMonth: values.saveMoneyPerMonth,
+        reason: values.reason,
+        commitment: values.commitment,
       };
       const dataToSave: DbCountInsert = toDbCountInsert(countToSave);
 

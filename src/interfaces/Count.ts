@@ -7,17 +7,21 @@ export interface Count {
   goalDate: Date;
   saveTimePerMonth?: number;
   saveMoneyPerMonth?: number;
+  reason?: string; // やめたい理由
+  commitment?: string; // 決意表明
 }
 
-// 2. DB用型
+// 2. DB用型（スネークケース、日付はISO8601文字列）
 export interface DbCount {
   id: string;
   user_id: string;
   title: string;
-  start_date: string; // ISO8601文字列
+  start_date: string;
   goal_date: string;
-  save_time_per_month?: number;
-  save_money_per_month?: number;
+  save_time_per_month?: number | null;
+  save_money_per_month?: number | null;
+  reason?: string | null;
+  commitment?: string | null;
 }
 
 // 3. 変換関数（フロント→DB）
@@ -29,6 +33,8 @@ export function toDbCount(count: Omit<Count, 'id'>): Omit<DbCount, 'id'> {
     goal_date: count.goalDate.toISOString(),
     save_time_per_month: count.saveTimePerMonth,
     save_money_per_month: count.saveMoneyPerMonth,
+    reason: count.reason,
+    commitment: count.commitment,
   };
 }
 
@@ -40,15 +46,16 @@ export function toCount(dbCount: DbCount): Count {
     title: dbCount.title,
     startDate: new Date(dbCount.start_date),
     goalDate: new Date(dbCount.goal_date),
-    saveTimePerMonth: dbCount.save_time_per_month,
-    saveMoneyPerMonth: dbCount.save_money_per_month,
+    saveTimePerMonth: dbCount.save_time_per_month ?? undefined,
+    saveMoneyPerMonth: dbCount.save_money_per_month ?? undefined,
+    reason: dbCount.reason ?? undefined,
+    commitment: dbCount.commitment ?? undefined,
   };
 }
 
-// IDなしの挿入用インターフェース
+// 5. 挿入用型と変換関数
 export interface DbCountInsert extends Omit<DbCount, 'id'> {}
 
-// 変換関数も用意しておく
 export function toDbCountInsert(count: Omit<Count, 'id'>): DbCountInsert {
   return {
     user_id: count.userId,
@@ -57,5 +64,7 @@ export function toDbCountInsert(count: Omit<Count, 'id'>): DbCountInsert {
     goal_date: count.goalDate.toISOString(),
     save_time_per_month: count.saveTimePerMonth,
     save_money_per_month: count.saveMoneyPerMonth,
+    reason: count.reason,
+    commitment: count.commitment,
   };
 }

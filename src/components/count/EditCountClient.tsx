@@ -56,6 +56,8 @@ export default function EditCountClient({ count }: Props) {
     goalDate: string;
     saveTimePerMonth?: number;
     saveMoneyPerMonth?: number;
+    reason?: string;
+    commitment?: string;
   }) => {
     setLoading(true);
     setGlobalLoading(true);
@@ -68,6 +70,8 @@ export default function EditCountClient({ count }: Props) {
         goalDate: new Date(values.goalDate),
         saveTimePerMonth: values.saveTimePerMonth ? Number(values.saveTimePerMonth) : undefined,
         saveMoneyPerMonth: values.saveMoneyPerMonth ? Number(values.saveMoneyPerMonth) : undefined,
+        reason: values.reason,
+        commitment: values.commitment,
       };
       const { error } = await supabase
         .from('count_items')
@@ -77,6 +81,8 @@ export default function EditCountClient({ count }: Props) {
           goal_date: updatedCount.goalDate.toISOString(),
           save_time_per_month: updatedCount.saveTimePerMonth,
           save_money_per_month: updatedCount.saveMoneyPerMonth,
+          reason: updatedCount.reason,
+          commitment: updatedCount.commitment,
         })
         .eq('id', localCount.id);
       if (error) {
@@ -99,8 +105,8 @@ export default function EditCountClient({ count }: Props) {
       <div>
         <p>タイトル: {localCount.title}</p>
         <p>開始日: {toLocaleDateStringJST(localCount.startDate)}</p>
-        <DurationCounter startDate={localCount.startDate} />
         <p>目標日: {toLocaleDateStringJST(localCount.goalDate)}</p>
+        <DurationCounter startDate={localCount.startDate} />
         <p>
           セーブ時間/月:{' '}
           {localCount.saveTimePerMonth ? `${localCount.saveTimePerMonth}分` : '未設定'}
@@ -111,6 +117,20 @@ export default function EditCountClient({ count }: Props) {
             ? `${localCount.saveMoneyPerMonth.toLocaleString()}円`
             : '未設定'}
         </p>
+        <div className="mt-4">
+          <p className="font-semibold">やめたい理由:</p>
+          <p className="mt-1">
+            {localCount.reason && localCount.reason.trim() ? localCount.reason : '未設定'}
+          </p>
+        </div>
+        <div className="mt-4">
+          <p className="font-semibold">決意表明:</p>
+          <p className="mt-1">
+            {localCount.commitment && localCount.commitment.trim()
+              ? localCount.commitment
+              : '未設定'}
+          </p>
+        </div>
         <div className="mt-6 flex justify-center gap-4">
           <button
             className="px-4 py-2 bg-blue-500 text-white rounded w-full max-w-[120px]"
@@ -143,6 +163,8 @@ export default function EditCountClient({ count }: Props) {
           goalDate: new Date(localCount.goalDate).toISOString().slice(0, 10),
           saveTimePerMonth: localCount.saveTimePerMonth ?? undefined,
           saveMoneyPerMonth: localCount.saveMoneyPerMonth ?? undefined,
+          reason: localCount.reason ?? undefined,
+          commitment: localCount.commitment ?? undefined,
         }}
         onSubmit={handleSubmit}
         loading={loading}

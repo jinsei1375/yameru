@@ -18,6 +18,8 @@ const countFormSchema = z
       .string()
       .optional()
       .refine((val) => val === '' || !isNaN(Number(val)), '数値で入力してください'),
+    reason: z.string().optional(),
+    commitment: z.string().optional(),
   })
   .refine(
     (data) => {
@@ -53,6 +55,8 @@ type CountFormProps = {
     goalDate: string;
     saveTimePerMonth?: number;
     saveMoneyPerMonth?: number;
+    reason?: string;
+    commitment?: string;
   };
   onSubmit: (values: {
     title: string;
@@ -60,6 +64,8 @@ type CountFormProps = {
     goalDate: string;
     saveTimePerMonth?: number;
     saveMoneyPerMonth?: number;
+    reason?: string;
+    commitment?: string;
   }) => Promise<void>;
   loading?: boolean;
 };
@@ -77,6 +83,8 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
       goalDate: initialValues?.goalDate ?? '',
       saveTimePerMonth: initialValues?.saveTimePerMonth?.toString() ?? '',
       saveMoneyPerMonth: initialValues?.saveMoneyPerMonth?.toString() ?? '',
+      reason: initialValues?.reason ?? '',
+      commitment: initialValues?.commitment ?? '',
     },
   });
 
@@ -87,6 +95,8 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
       goalDate: data.goalDate,
       saveTimePerMonth: data.saveTimePerMonth ? Number(data.saveTimePerMonth) : undefined,
       saveMoneyPerMonth: data.saveMoneyPerMonth ? Number(data.saveMoneyPerMonth) : undefined,
+      reason: data.reason,
+      commitment: data.commitment,
     });
   };
 
@@ -142,6 +152,29 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
         {errors.saveMoneyPerMonth && (
           <p className="text-red-500 text-sm">{errors.saveMoneyPerMonth.message}</p>
         )}
+        <p className="text-xs text-gray-500 mt-1">
+          ※ 節約時間または節約金額のどちらか一方は必ず入力してください
+        </p>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">やめたい理由</label>
+        <textarea
+          {...register('reason')}
+          className="w-full border rounded p-2 text-gray-900 h-24 resize-none"
+          placeholder="例: 健康のため、時間を有効活用したいため..."
+        />
+        {errors.reason && <p className="text-red-500 text-sm">{errors.reason.message}</p>}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">決意表明</label>
+        <textarea
+          {...register('commitment')}
+          className="w-full border rounded p-2 text-gray-900 h-24 resize-none"
+          placeholder="例: 絶対にやめて新しい自分になる、家族のために頑張る..."
+        />
+        {errors.commitment && <p className="text-red-500 text-sm">{errors.commitment.message}</p>}
       </div>
 
       <div className="flex gap-2">

@@ -1,7 +1,7 @@
 import EditCountClient from '@/components/count/EditCountClient';
 import { PageTitle } from '@/components/PageTitle';
 import { createClient } from '@/lib/supabase/server';
-import { toCount } from '@/types/Count';
+import { toCount } from '@/interfaces/Count';
 import { notFound } from 'next/navigation';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

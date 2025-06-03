@@ -1,5 +1,5 @@
 'use client';
-import { Count } from '@/types/Count';
+import { Count } from '@/interfaces/Count';
 import { DurationCounter } from '@/components/count/DurationCounter';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -40,12 +40,12 @@ export function CountCard({ count }: Props) {
         <p className="text-sm text-gray-700">
           <DurationCounter startDate={count.startDate} />
         </p>
-        {count.saveMoneyPerMonth && (
+        {count.saveMoneyPerMonth && count.saveMoneyPerMonth > 0 && (
           <p className="text-sm text-gray-700">
             月 {count.saveMoneyPerMonth.toLocaleString()} 円節約中
           </p>
         )}
-        {count.saveTimePerMonth && (
+        {count.saveTimePerMonth && count.saveTimePerMonth > 0 && (
           <p className="text-sm text-gray-700">月 {count.saveTimePerMonth} 時間節約中</p>
         )}
         <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
