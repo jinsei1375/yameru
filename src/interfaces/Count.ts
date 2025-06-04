@@ -1,3 +1,5 @@
+import { IfThenRule } from './IfThenRules';
+
 // 1. フロント用型（キャメルケース、Date型など）
 export interface Count {
   id: string;
@@ -9,6 +11,7 @@ export interface Count {
   saveMoneyPerMonth?: number;
   reason?: string; // やめたい理由
   commitment?: string; // 決意表明
+  ifThenRules?: IfThenRule[]; // If-Then ルール
 }
 
 // 2. DB用型（スネークケース、日付はISO8601文字列）

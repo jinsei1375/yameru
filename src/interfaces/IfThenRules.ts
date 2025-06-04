@@ -11,7 +11,7 @@ export interface IfThenRule {
 // DB用型（スネークケース）
 export interface DbIfThenRule {
   id: string;
-  count_item_id: string;
+  count_id: string;
   if_condition: string;
   then_action: string;
   created_at: string;
@@ -26,7 +26,7 @@ export function toDbIfThenRuleInsert(
   rule: Omit<IfThenRule, 'id' | 'createdAt' | 'updatedAt'>
 ): DbIfThenRuleInsert {
   return {
-    count_item_id: rule.countItemId,
+    count_id: rule.countItemId,
     if_condition: rule.ifCondition,
     then_action: rule.thenAction,
   };
@@ -36,7 +36,7 @@ export function toDbIfThenRuleInsert(
 export function toIfThenRule(db: DbIfThenRule): IfThenRule {
   return {
     id: db.id,
-    countItemId: db.count_item_id,
+    countItemId: db.count_id,
     ifCondition: db.if_condition,
     thenAction: db.then_action,
     createdAt: new Date(db.created_at),
