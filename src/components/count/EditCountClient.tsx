@@ -2,7 +2,7 @@
 
 import { Count } from '@/interfaces/Count';
 import { IfThenRule, toIfThenRule, toDbIfThenRuleInsert } from '@/interfaces/IfThenRules';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { DurationCounter } from '@/components/count/DurationCounter';
 import { CountForm } from '@/components/count/CountForm';
 import { createClient } from '@/lib/supabase/client';
@@ -26,7 +26,7 @@ export default function EditCountClient({ count }: Props) {
   const router = useRouter();
 
   // If-Thenルールを読み込む
-  const loadIfThenRules = async () => {
+  const loadIfThenRules = useCallback(async () => {
     try {
       const supabase = createClient();
       const { data, error } = await supabase
@@ -46,13 +46,13 @@ export default function EditCountClient({ count }: Props) {
     } catch (error) {
       console.error('If-Thenルールの読み込み中にエラー:', error);
     }
-  };
+  }, [count.id]);
 
   // コンポーネントマウント時にローディングを解除とIf-Thenルールを読み込み
   useEffect(() => {
     setGlobalLoading(false);
     loadIfThenRules();
-  }, [setGlobalLoading]);
+  }, [setGlobalLoading, loadIfThenRules]);
 
   // 削除処理
   const handleDelete = async () => {
