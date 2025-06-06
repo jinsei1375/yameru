@@ -33,9 +33,9 @@ export const metadata = {
     ],
   },
   icons: {
-    icon: '/favicon.ico?v=2',
+    icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
-    shortcut: '/favicon.ico?v=2',
+    shortcut: '/favicon.ico',
   },
   manifest: '/site.webmanifest',
 };
