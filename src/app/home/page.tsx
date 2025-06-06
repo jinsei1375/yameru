@@ -1,13 +1,12 @@
-import { PageTitle } from '@/components/PageTitle';
 import { createClient } from '@/lib/supabase/server';
 import { toCount } from '@/interfaces/Count';
-import { UrgeLog, toUrgeLog } from '@/interfaces/UrgeLog';
+import { PageTitle } from '@/components/PageTitle';
 import MotivationSection from '@/components/home/MotivationSection';
 import ActiveCountsCard from '@/components/home/ActiveCountsCard';
 import WeeklyUrgeLogsCard from '@/components/home/WeeklyUrgeLogsCard';
 import AchievementDisplay from '@/components/home/AchievementDisplay';
 import BadgeCollection from '@/components/home/BadgeCollection';
-import { getUserBadges } from '@/lib/badge';
+import { redirect } from 'next/navigation';
 
 async function getHomeData() {
   const supabase = await createClient();
@@ -23,6 +22,7 @@ async function getHomeData() {
     const { data: countsData, error: countsError } = await supabase
       .from('count_items')
       .select('*')
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false });
 
     if (countsError) throw countsError;
@@ -39,7 +39,7 @@ async function getHomeData() {
 
     // 今週の衝動ログを取得
     const userCountIds = counts.map((count) => count.id);
-    let weeklyUrgeLogs: UrgeLog[] = [];
+    let weeklyUrgeLogs = [];
 
     if (userCountIds.length > 0) {
       const { data: urgeLogsData, error: urgeLogsError } = await supabase
@@ -51,31 +51,36 @@ async function getHomeData() {
 
       if (urgeLogsError) throw urgeLogsError;
 
-      weeklyUrgeLogs = urgeLogsData.map(toUrgeLog);
+      weeklyUrgeLogs = urgeLogsData;
     }
-
-    // バッジを取得
-    const badges = await getUserBadges(user.id);
 
     return {
       counts,
       weeklyUrgeLogsCount: weeklyUrgeLogs.length,
       weeklyUrgeLogs,
-      badges,
     };
   } catch (error) {
     console.error('Error fetching home data:', error);
     return {
       counts: [],
       weeklyUrgeLogsCount: 0,
-      weeklyUrgeLogs: [] as UrgeLog[],
-      badges: [],
+      weeklyUrgeLogs: [],
     };
   }
 }
 
 export default async function HomePage() {
-  const { counts, weeklyUrgeLogsCount, weeklyUrgeLogs, badges } = await getHomeData();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  // ホーム画面のデータを取得
+  const { counts, weeklyUrgeLogsCount, weeklyUrgeLogs } = await getHomeData();
 
   return (
     <div className="p-4 space-y-6">
@@ -89,7 +94,7 @@ export default async function HomePage() {
       </div>
 
       <AchievementDisplay counts={counts} weeklyUrgeLogs={weeklyUrgeLogs} />
-      <BadgeCollection badges={badges} />
+      <BadgeCollection />
     </div>
   );
 }

@@ -1,15 +1,16 @@
-import { createClient } from './supabase/client';
+import { createClient as createClientClient } from './supabase/client';
 import { Badge, DbBadge, toBadge } from '@/interfaces/Badge';
 
-// ユーザーのバッジ一覧を取得
+// クライアントサイド用の関数
 export async function getUserBadges(userId: string): Promise<Badge[]> {
   try {
-    const supabase = createClient();
+    const supabase = createClientClient();
     const { data: userBadges, error } = await supabase
       .from('user_badges')
       .select(
         `
         badge_id,
+        earned_at,
         badges:badge_id (
           id,
           name,
@@ -29,70 +30,92 @@ export async function getUserBadges(userId: string): Promise<Badge[]> {
 
     return userBadges
       .filter((ub) => ub.badges !== null)
-      .map((ub) => toBadge(ub.badges as unknown as DbBadge));
+      .map((ub) => ({
+        ...toBadge(ub.badges as unknown as DbBadge),
+        createdAt: new Date(ub.earned_at),
+      }));
   } catch (error) {
     console.error('バッジの取得中にエラー:', error);
     return [];
   }
 }
 
-// ユーザーのストリーク日数に基づいてバッジをチェックし、条件を満たすものを付与
-export async function checkAndAwardBadges(userId: string, streakDays: number): Promise<void> {
+// ホーム画面でのバッジチェック（クライアントサイド用）
+export async function checkHomeBadges(userId: string): Promise<void> {
+  console.log(userId);
   try {
-    const supabase = createClient();
+    const supabase = createClientClient();
 
-    // 条件を満たすバッジを取得
-    const { data: eligibleBadges, error: badgesError } = await supabase
-      .from('badges')
-      .select('*')
-      .lte('days_required', streakDays);
+    // ユーザーのカウントを取得
+    const { data: counts, error: countsError } = await supabase
+      .from('count_items')
+      .select('start_date')
+      .eq('user_id', userId)
+      .eq('is_completed', false);
 
-    if (badgesError) {
-      console.error('バッジの取得に失敗:', badgesError);
+    if (countsError) {
+      console.error('カウントの取得に失敗:', countsError);
       return;
     }
 
-    if (!eligibleBadges || eligibleBadges.length === 0) {
+    if (!counts || counts.length === 0) {
+      console.log('カウントが存在しません');
       return;
+    } else {
+      console.log(counts);
+    }
+
+    // 最も古いカウントの開始日から経過日数を計算
+    const oldestStartDate = new Date(
+      Math.min(...counts.map((c) => new Date(c.start_date).getTime()))
+    );
+    const streakDays = Math.floor(
+      (new Date().getTime() - oldestStartDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    console.log(streakDays);
+
+    // 条件を満たすバッジを取得
+    const { data: eligibleBadges } = await supabase
+      .from('badges')
+      .select('*')
+      .eq('days_required', streakDays);
+
+    if (!eligibleBadges || eligibleBadges.length === 0) {
+      console.log('条件を満たすバッジがありません');
+      return;
+    } else {
+      console.log(eligibleBadges);
     }
 
     // 既に獲得しているバッジを取得
-    const { data: existingBadges, error: existingError } = await supabase
+    const { data: existingBadges } = await supabase
       .from('user_badges')
       .select('badge_id')
       .eq('user_id', userId);
-
-    if (existingError) {
-      console.error('既存バッジの取得に失敗:', existingError);
-      return;
-    }
 
     const existingBadgeIds = existingBadges?.map((b) => b.badge_id) || [];
 
     // 新しいバッジを付与
     const newBadges = eligibleBadges.filter((badge) => !existingBadgeIds.includes(badge.id));
     if (newBadges.length > 0) {
-      const { error: insertError } = await supabase.from('user_badges').insert(
+      console.log(newBadges);
+      await supabase.from('user_badges').insert(
         newBadges.map((badge) => ({
           user_id: userId,
           badge_id: badge.id,
-          awarded_at: new Date().toISOString(),
+          earned_at: new Date().toISOString(),
         }))
       );
-
-      if (insertError) {
-        console.error('バッジの付与に失敗:', insertError);
-      }
     }
   } catch (error) {
-    console.error('バッジのチェック中にエラー:', error);
+    console.error('ホーム画面でのバッジチェック中にエラー:', error);
   }
 }
 
-// バッジの獲得状態を確認
+// バッジの獲得状態を確認（クライアントサイド用）
 export async function checkBadgeStatus(userId: string, badgeId: string): Promise<boolean> {
   try {
-    const supabase = createClient();
+    const supabase = createClientClient();
     const { data, error } = await supabase
       .from('user_badges')
       .select('badge_id')
