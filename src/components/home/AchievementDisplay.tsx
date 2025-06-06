@@ -28,7 +28,7 @@ export default function AchievementDisplay({ counts, weeklyUrgeLogs }: Achieveme
       : 0;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-400">
       <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
         <Trophy className="text-yellow-500" size={20} />
         達成状況
@@ -42,11 +42,11 @@ export default function AchievementDisplay({ counts, weeklyUrgeLogs }: Achieveme
           <p className="text-sm text-gray-600">最長継続日数</p>
         </div>
 
-        {/* 完了したカウント */}
+        {/* 達成したカウント */}
         <div className="text-center p-4 bg-blue-50 rounded-lg">
           <Trophy className="mx-auto text-blue-600 mb-2" size={24} />
           <div className="text-2xl font-bold text-blue-600">{completedCounts}</div>
-          <p className="text-sm text-gray-600">完了したカウント</p>
+          <p className="text-sm text-gray-600">達成したカウント</p>
         </div>
 
         {/* 今週の平均衝動度 */}

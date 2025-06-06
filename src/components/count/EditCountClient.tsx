@@ -21,6 +21,7 @@ export default function EditCountClient({ count }: Props) {
   const [localCount, setLocalCount] = useState(count);
   const [ifThenRules, setIfThenRules] = useState<IfThenRule[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
   const { showNotification, setLoading: setGlobalLoading } = useUI();
 
   const router = useRouter();
@@ -86,6 +87,42 @@ export default function EditCountClient({ count }: Props) {
       setLoading(false);
       setGlobalLoading(false);
       setIsDeleteModalOpen(false);
+    }
+  };
+
+  // 完了処理
+  const handleComplete = async () => {
+    setLoading(true);
+    setGlobalLoading(true);
+    try {
+      const supabase = createClient();
+      const completedDate = new Date();
+
+      const { error } = await supabase
+        .from('count_items')
+        .update({
+          is_completed: true,
+          completed_date: completedDate.toISOString(),
+        })
+        .eq('id', count.id);
+
+      if (error) {
+        console.error('完了処理に失敗:', error);
+        alert('完了処理に失敗しました。');
+        return;
+      }
+
+      setLocalCount((prev) => ({
+        ...prev,
+        isCompleted: true,
+        completedDate: completedDate,
+      }));
+      showNotification('カウントを達成しました！おめでとうございます！', 'success');
+      router.push('/count');
+    } finally {
+      setLoading(false);
+      setGlobalLoading(false);
+      setIsCompleteModalOpen(false);
     }
   };
 
@@ -185,10 +222,23 @@ export default function EditCountClient({ count }: Props) {
   if (!isEditing) {
     return (
       <div>
+        {/* 完了済みの場合の表示 */}
+        {localCount.isCompleted && (
+          <div className="bg-green-100 border border-green-200 rounded-lg p-3 mb-4">
+            <div className="text-green-800 font-medium text-center">
+              🎉 このカウントは達成済みです！ 🎉
+            </div>
+          </div>
+        )}
+
         <p>タイトル: {localCount.title}</p>
         <p>開始日: {toLocaleDateStringJST(localCount.startDate)}</p>
         <p>目標日: {toLocaleDateStringJST(localCount.goalDate)}</p>
-        <DurationCounter startDate={localCount.startDate} />
+        <DurationCounter
+          startDate={localCount.startDate}
+          isCompleted={localCount.isCompleted}
+          completedDate={localCount.completedDate}
+        />
         <p>
           セーブ時間/月:{' '}
           {localCount.saveTimePerMonth ? `${localCount.saveTimePerMonth}分` : '未設定'}
@@ -239,27 +289,58 @@ export default function EditCountClient({ count }: Props) {
             <p className="mt-1 text-gray-500">未設定</p>
           )}
         </div>
-        <div className="mt-6 flex justify-center gap-4">
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded w-full max-w-[120px]"
-            onClick={() => setIsEditing(true)}
-          >
-            編集
-          </button>
-          <button
-            className="px-4 py-2 bg-red-500 text-white rounded w-full max-w-[120px]"
-            onClick={() => setIsDeleteModalOpen(true)}
-          >
-            削除
-          </button>
-          <ConfirmModal
-            isOpen={isDeleteModalOpen}
-            title="カウントの削除"
-            message="このカウントを削除してもよろしいですか？"
-            onConfirm={handleDelete}
-            onCancel={() => setIsDeleteModalOpen(false)}
-          />
+
+        <div className="mt-6 space-y-3">
+          {/* 達成ボタン（完了していない場合のみ） */}
+          {!localCount.isCompleted && (
+            <button
+              className="w-full px-4 py-3 bg-green-500 text-white rounded font-medium hover:bg-green-600 transition-colors"
+              onClick={() => setIsCompleteModalOpen(true)}
+            >
+              🎯 目標達成！
+            </button>
+          )}
+
+          {/* 編集・削除ボタン */}
+          <div className="flex gap-3">
+            <button
+              className={`flex-1 px-4 py-2 rounded transition-colors ${
+                localCount.isCompleted
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
+              onClick={() => !localCount.isCompleted && setIsEditing(true)}
+              disabled={localCount.isCompleted}
+            >
+              編集
+            </button>
+            <button
+              className="flex-1 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+              onClick={() => setIsDeleteModalOpen(true)}
+            >
+              削除
+            </button>
+          </div>
         </div>
+
+        {/* 削除確認モーダル */}
+        <ConfirmModal
+          isOpen={isDeleteModalOpen}
+          title="カウントの削除"
+          message="このカウントを削除してもよろしいですか？"
+          onConfirm={handleDelete}
+          onCancel={() => setIsDeleteModalOpen(false)}
+        />
+
+        {/* 完了確認モーダル */}
+        <ConfirmModal
+          isOpen={isCompleteModalOpen}
+          title="目標達成の確認"
+          message="このカウントを達成済みにしますか？一度達成にすると元に戻せません。"
+          confirmButtonStyle="success"
+          onConfirm={handleComplete}
+          onCancel={() => setIsCompleteModalOpen(false)}
+        />
       </div>
     );
   } else {

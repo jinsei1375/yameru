@@ -13,6 +13,7 @@ export interface Count {
   commitment?: string; // 決意表明
   ifThenRules?: IfThenRule[]; // If-Then ルール
   isCompleted: boolean;
+  completedDate?: Date; // 完了日時
 }
 
 // 2. DB用型（スネークケース、日付はISO8601文字列）
@@ -27,6 +28,7 @@ export interface DbCount {
   reason?: string | null;
   commitment?: string | null;
   is_completed: boolean; // 完了フラグ
+  completed_date?: string | null; // 完了日時
 }
 
 // 3. 変換関数（フロント→DB）
@@ -57,6 +59,7 @@ export function toCount(dbCount: DbCount): Count {
     reason: dbCount.reason ?? undefined,
     commitment: dbCount.commitment ?? undefined,
     isCompleted: dbCount.is_completed,
+    completedDate: dbCount.completed_date ? new Date(dbCount.completed_date) : undefined,
   };
 }
 
