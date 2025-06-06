@@ -1,4 +1,4 @@
-import { IfThenRule } from './IfThenRules';
+import { IfThenRule } from './IfThenRule';
 
 // 1. フロント用型（キャメルケース、Date型など）
 export interface Count {

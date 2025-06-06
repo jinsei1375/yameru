@@ -1,7 +1,7 @@
 'use client';
 
 import { Count } from '@/interfaces/Count';
-import { IfThenRule, toIfThenRule, toDbIfThenRuleInsert } from '@/interfaces/IfThenRules';
+import { IfThenRule, toIfThenRule, toDbIfThenRuleInsert } from '@/interfaces/IfThenRule';
 import { useState, useEffect, useCallback } from 'react';
 import { DurationCounter } from '@/components/count/DurationCounter';
 import { CountForm } from '@/components/count/CountForm';

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { CountForm } from '@/components/count/CountForm';
 import { Count, DbCountInsert, toDbCountInsert } from '@/interfaces/Count';
-import { toDbIfThenRuleInsert } from '@/interfaces/IfThenRules';
+import { toDbIfThenRuleInsert } from '@/interfaces/IfThenRule';
 import { PageTitle } from '@/components/PageTitle';
 import { useUI } from '@/contexts/UIContext';
 import { useState } from 'react';
