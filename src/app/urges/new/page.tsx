@@ -1,10 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageTitle } from '@/components/PageTitle';
 import { UrgeLogForm } from '@/components/urge/UrgeLogForm';
-import { useAuth } from '@/contexts/AuthContext';
 import { useUI } from '@/contexts/UIContext';
 import { createClient } from '@/lib/supabase/client';
 import { Count, toCount } from '@/interfaces/Count';
@@ -12,26 +11,25 @@ import { toDbUrgeLogInsert } from '@/interfaces/UrgeLog';
 import { NavButton } from '@/components/NavButton';
 
 export default function NewUrgeLogPage() {
-  const { user, loading: authLoading } = useAuth();
   const { showNotification, setLoading: setGlobalLoading } = useUI();
   const router = useRouter();
 
   const [counts, setCounts] = useState<Count[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (!authLoading && user) {
-      fetchCounts();
-    }
-  }, [user, authLoading]);
-
-  const fetchCounts = async () => {
+  const fetchCounts = useCallback(async () => {
     try {
       const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) return;
+
       const { data, error } = await supabase
         .from('count_items')
         .select('*')
-        .eq('user_id', user!.id)
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -42,7 +40,11 @@ export default function NewUrgeLogPage() {
       console.error('Error fetching counts:', error);
       showNotification('カウントの取得に失敗しました', 'error');
     }
-  };
+  }, [showNotification]);
+
+  useEffect(() => {
+    fetchCounts();
+  }, [fetchCounts]);
 
   const handleSubmit = async (values: {
     countId: string;
@@ -74,15 +76,6 @@ export default function NewUrgeLogPage() {
       setGlobalLoading(false);
     }
   };
-
-  if (!user) {
-    return (
-      <div className="p-4">
-        <PageTitle>衝動ログ記録</PageTitle>
-        <p className="text-center">ログインが必要です</p>
-      </div>
-    );
-  }
 
   if (counts.length === 0) {
     return (

@@ -1,9 +1,7 @@
-// components/ConfirmModal.tsx
 'use client';
 
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Fragment } from 'react';
 
 type ConfirmModalProps = {
   isOpen: boolean;

@@ -40,7 +40,6 @@ export function UrgeLogForm({ counts, onSubmit, loading }: UrgeLogFormProps) {
     register,
     handleSubmit,
     watch,
-    setValue,
     formState: { errors },
   } = useForm<UrgeLogFormValues>({
     resolver: zodResolver(urgeLogFormSchema),

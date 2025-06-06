@@ -4,7 +4,6 @@ import { createClient } from '@/lib/supabase/server';
 import { toCount } from '@/interfaces/Count';
 import { notFound } from 'next/navigation';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function CountEditPage({ params }: any) {
   const supabase = await createClient();
   const { id } = await params;

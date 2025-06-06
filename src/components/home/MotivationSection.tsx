@@ -49,7 +49,7 @@ export default function MotivationSection() {
       <h2 className="text-xl font-semibold text-gray-800 mb-3">{getTimeBasedMessage()}</h2>
 
       <blockquote className="text-gray-600 italic text-sm border-l-4 border-blue-300 pl-4 py-2 bg-white bg-opacity-50 rounded">
-        <p className="mb-2">"{randomQuote.quote}"</p>
+        <p className="mb-2">&quot;{randomQuote.quote}&quot;</p>
         <cite className="text-xs text-gray-500 not-italic">— {randomQuote.author}</cite>
       </blockquote>
 
