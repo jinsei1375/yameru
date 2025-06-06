@@ -2,6 +2,7 @@ import { Badge as BadgeType } from '@/interfaces/Badge';
 import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import Image from 'next/image';
 
 type Props = {
   badge: BadgeType;
@@ -45,7 +46,7 @@ export function Badge({ badge, isAwarded }: Props) {
       <div className="flex items-center space-x-3">
         <div className="flex-shrink-0">
           {badge.iconUrl ? (
-            <img src={badge.iconUrl} alt={badge.name} className="w-12 h-12 object-contain" />
+            <Image src={badge.iconUrl} alt={badge.name} className="w-12 h-12 object-contain" />
           ) : (
             <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
               <span className="text-2xl">🏆</span>

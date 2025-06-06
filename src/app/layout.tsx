@@ -1,4 +1,5 @@
-import { Geist, Geist_Mono } from 'next/font/google';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { Header } from '@/components/Header';
@@ -7,19 +8,12 @@ import { UIProvider } from '@/contexts/UIContext';
 import { NotificationBar } from '@/components/NotificationBar';
 import { GlobalLoading } from '@/components/GlobalLoading';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
+const inter = Inter({ subsets: ['latin'] });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Yameru',
   description: 'やめたいのにやめられない行動を支援するアプリ Yameru',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   openGraph: {
     title: 'Yameru',
     description: 'やめたいのにやめられない行動を支援するアプリ Yameru',
@@ -40,11 +34,7 @@ export const metadata = {
   manifest: '/site.webmanifest',
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
       <head>
@@ -57,7 +47,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
         <meta name="theme-color" content="#fefae0" />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background`}>
+      <body className={inter.className}>
         <AuthProvider>
           <UIProvider>
             <GlobalLoading />

@@ -2,7 +2,6 @@
 
 import { Count } from '@/interfaces/Count';
 import { IfThenRule, toIfThenRule, toDbIfThenRuleInsert } from '@/interfaces/IfThenRule';
-import { Badge } from '@/interfaces/Badge';
 import { useState, useEffect, useCallback } from 'react';
 import { DurationCounter } from '@/components/count/DurationCounter';
 import { CountForm } from '@/components/count/CountForm';
@@ -10,9 +9,7 @@ import { createClient } from '@/lib/supabase/client';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { useRouter } from 'next/navigation';
 import { useUI } from '@/contexts/UIContext';
-import { useAuth } from '@/contexts/AuthContext';
 import { toLocaleDateStringJST } from '@/lib/dateUtils';
-import { checkAndAwardBadges } from '@/lib/badge';
 
 type Props = {
   count: Count;
@@ -26,7 +23,6 @@ export default function EditCountClient({ count }: Props) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
   const { showNotification, setLoading: setGlobalLoading } = useUI();
-  const { user } = useAuth();
 
   const router = useRouter();
 
@@ -53,54 +49,11 @@ export default function EditCountClient({ count }: Props) {
     }
   }, [count.id]);
 
-  // バッジのチェックと付与
-  const checkAndAwardBadgesForCount = useCallback(async () => {
-    try {
-      if (!user) return;
-
-      const streakDays = Math.floor(
-        (new Date().getTime() - localCount.startDate.getTime()) / (1000 * 60 * 60 * 24)
-      );
-
-      const supabase = createClient();
-
-      // バッジの条件をチェック
-      const { data: badges } = await supabase
-        .from('badges')
-        .select('*')
-        .lte('days_required', streakDays);
-
-      if (badges && badges.length > 0) {
-        // 既存のバッジを取得
-        const { data: existingBadges } = await supabase
-          .from('user_badges')
-          .select('badge_id')
-          .eq('user_id', user.id);
-
-        const existingBadgeIds = existingBadges?.map((b) => b.badge_id) || [];
-
-        // 新しいバッジを付与
-        for (const badge of badges) {
-          if (!existingBadgeIds.includes(badge.id)) {
-            await supabase.from('user_badges').insert({
-              user_id: user.id,
-              badge_id: badge.id,
-              awarded_at: new Date().toISOString(),
-            });
-          }
-        }
-      }
-    } catch (error) {
-      console.error('バッジのチェック中にエラー:', error);
-    }
-  }, [localCount.startDate, user]);
-
   // コンポーネントマウント時にローディングを解除とIf-Thenルールを読み込み
   useEffect(() => {
     setGlobalLoading(false);
     loadIfThenRules();
-    checkAndAwardBadgesForCount();
-  }, [setGlobalLoading, loadIfThenRules, checkAndAwardBadgesForCount]);
+  }, [setGlobalLoading, loadIfThenRules]);
 
   // 削除処理
   const handleDelete = async () => {
@@ -258,7 +211,6 @@ export default function EditCountClient({ count }: Props) {
       // 状態を更新
       setLocalCount(updatedCount);
       await loadIfThenRules(); // If-Thenルールを再読み込み
-      await checkAndAwardBadgesForCount(); // バッジのチェックと付与
       setIsEditing(false);
       showNotification('保存に成功しました！', 'success');
     } finally {

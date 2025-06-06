@@ -5,6 +5,7 @@ import { Badge } from '@/interfaces/Badge';
 import { Trophy } from 'lucide-react';
 import { checkHomeBadges, getUserBadges } from '@/lib/badge';
 import { useAuth } from '@/contexts/AuthContext';
+import Image from 'next/image';
 
 // ローカルストレージのキー
 const BADGE_CHECK_KEY = 'last_badge_check_date';
@@ -87,7 +88,7 @@ export default function BadgeCollection() {
           {badges.map((badge) => (
             <div key={badge.id} className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
               {badge.iconUrl ? (
-                <img src={badge.iconUrl} alt={badge.name} className="w-8 h-8 object-contain" />
+                <Image src={badge.iconUrl} alt={badge.name} className="w-8 h-8 object-contain" />
               ) : (
                 <span className="text-2xl">🏆</span>
               )}
