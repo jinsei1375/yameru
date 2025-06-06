@@ -88,3 +88,18 @@ export function toLocaleDateStringJST(date: Date | string): string {
   const jstDate = new Date(d.getTime() + JST_OFFSET);
   return jstDate.toLocaleDateString('ja-JP');
 }
+
+/**
+ * 日時をフォーマットされた文字列に変換（日本時間基準）
+ */
+export function formatJSTDateTime(date: Date | string): string {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  const jstDate = new Date(d.getTime() + JST_OFFSET);
+  return jstDate.toLocaleDateString('ja-JP', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
