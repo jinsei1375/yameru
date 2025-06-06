@@ -6,11 +6,19 @@ import MotivationSection from '@/components/home/MotivationSection';
 import ActiveCountsCard from '@/components/home/ActiveCountsCard';
 import WeeklyUrgeLogsCard from '@/components/home/WeeklyUrgeLogsCard';
 import AchievementDisplay from '@/components/home/AchievementDisplay';
+import BadgeCollection from '@/components/home/BadgeCollection';
+import { getUserBadges } from '@/lib/badge';
 
 async function getHomeData() {
   const supabase = await createClient();
 
   try {
+    // ユーザー情報を取得
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error('User not found');
+
     // カウントデータを取得
     const { data: countsData, error: countsError } = await supabase
       .from('count_items')
@@ -46,10 +54,14 @@ async function getHomeData() {
       weeklyUrgeLogs = urgeLogsData.map(toUrgeLog);
     }
 
+    // バッジを取得
+    const badges = await getUserBadges(user.id);
+
     return {
       counts,
       weeklyUrgeLogsCount: weeklyUrgeLogs.length,
       weeklyUrgeLogs,
+      badges,
     };
   } catch (error) {
     console.error('Error fetching home data:', error);
@@ -57,12 +69,13 @@ async function getHomeData() {
       counts: [],
       weeklyUrgeLogsCount: 0,
       weeklyUrgeLogs: [] as UrgeLog[],
+      badges: [],
     };
   }
 }
 
 export default async function HomePage() {
-  const { counts, weeklyUrgeLogsCount, weeklyUrgeLogs } = await getHomeData();
+  const { counts, weeklyUrgeLogsCount, weeklyUrgeLogs, badges } = await getHomeData();
 
   return (
     <div className="p-4 space-y-6">
@@ -76,6 +89,7 @@ export default async function HomePage() {
       </div>
 
       <AchievementDisplay counts={counts} weeklyUrgeLogs={weeklyUrgeLogs} />
+      <BadgeCollection badges={badges} />
     </div>
   );
 }
