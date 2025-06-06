@@ -27,6 +27,7 @@ export default function NewCountPage() {
     saveMoneyPerMonth?: number;
     reason?: string;
     commitment?: string;
+    isCompleted?: boolean;
     ifThenRules: Array<{
       ifCondition: string;
       thenAction: string;
@@ -47,6 +48,7 @@ export default function NewCountPage() {
         saveMoneyPerMonth: values.saveMoneyPerMonth,
         reason: values.reason,
         commitment: values.commitment,
+        isCompleted: false,
       };
       const dataToSave: DbCountInsert = toDbCountInsert(countToSave);
 

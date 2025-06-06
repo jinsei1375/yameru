@@ -12,6 +12,7 @@ export interface Count {
   reason?: string; // やめたい理由
   commitment?: string; // 決意表明
   ifThenRules?: IfThenRule[]; // If-Then ルール
+  isCompleted: boolean;
 }
 
 // 2. DB用型（スネークケース、日付はISO8601文字列）
@@ -25,6 +26,7 @@ export interface DbCount {
   save_money_per_month?: number | null;
   reason?: string | null;
   commitment?: string | null;
+  is_completed: boolean; // 完了フラグ
 }
 
 // 3. 変換関数（フロント→DB）
@@ -38,6 +40,7 @@ export function toDbCount(count: Omit<Count, 'id'>): Omit<DbCount, 'id'> {
     save_money_per_month: count.saveMoneyPerMonth,
     reason: count.reason,
     commitment: count.commitment,
+    is_completed: false,
   };
 }
 
@@ -53,6 +56,7 @@ export function toCount(dbCount: DbCount): Count {
     saveMoneyPerMonth: dbCount.save_money_per_month ?? undefined,
     reason: dbCount.reason ?? undefined,
     commitment: dbCount.commitment ?? undefined,
+    isCompleted: dbCount.is_completed,
   };
 }
 
@@ -69,5 +73,6 @@ export function toDbCountInsert(count: Omit<Count, 'id'>): DbCountInsert {
     save_money_per_month: count.saveMoneyPerMonth,
     reason: count.reason,
     commitment: count.commitment,
+    is_completed: false,
   };
 }
