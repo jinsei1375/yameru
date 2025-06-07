@@ -1,5 +1,7 @@
 'use client';
 
+import { Loader2 } from 'lucide-react';
+
 type LoadingSpinnerProps = {
   size?: 'sm' | 'md' | 'lg';
   color?: 'blue' | 'white' | 'gray';
@@ -30,11 +32,11 @@ export function LoadingSpinner({ size = 'md', color = 'blue', message }: Loading
 }
 
 // グローバルローディングオーバーレイ
-export function LoadingOverlay({ message = '読み込み中...' }: { message?: string }) {
+export function LoadingOverlay() {
   return (
-    <div className="absolute inset-0 bg-black/50 z-50 flex items-center justify-center">
-      <div className="bg-white rounded-lg p-6 shadow-xl">
-        <LoadingSpinner size="lg" message={message} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 overflow-hidden">
+      <div className="bg-white p-4 rounded-lg shadow-lg">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     </div>
   );

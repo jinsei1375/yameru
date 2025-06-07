@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
 import { toCount } from '@/interfaces/Count';
-import { PageTitle } from '@/components/PageTitle';
 import MotivationSection from '@/components/home/MotivationSection';
 import ActiveCountsCard from '@/components/home/ActiveCountsCard';
 import WeeklyUrgeLogsCard from '@/components/home/WeeklyUrgeLogsCard';
@@ -84,10 +83,7 @@ export default async function HomePage() {
 
   return (
     <div className="p-4 space-y-6">
-      <PageTitle>ホーム</PageTitle>
-
       <MotivationSection />
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <ActiveCountsCard counts={counts} />
         <WeeklyUrgeLogsCard count={weeklyUrgeLogsCount} />

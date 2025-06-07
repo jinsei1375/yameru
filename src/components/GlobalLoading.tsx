@@ -1,7 +1,7 @@
 'use client';
 
 import { useUI } from '@/contexts/UIContext';
-import { LoadingOverlay } from '@/components/LoadingSpinner';
+import { LoadingOverlay } from './LoadingSpinner';
 
 export function GlobalLoading() {
   const { isLoading } = useUI();
