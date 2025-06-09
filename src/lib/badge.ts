@@ -59,7 +59,6 @@ export async function checkHomeBadges(userId: string): Promise<void> {
     }
 
     if (!counts || counts.length === 0) {
-      console.log('カウントが存在しません');
       return;
     } else {
       console.log(counts);
@@ -81,10 +80,7 @@ export async function checkHomeBadges(userId: string): Promise<void> {
       .eq('days_required', streakDays);
 
     if (!eligibleBadges || eligibleBadges.length === 0) {
-      console.log('条件を満たすバッジがありません');
       return;
-    } else {
-      console.log(eligibleBadges);
     }
 
     // 既に獲得しているバッジを取得

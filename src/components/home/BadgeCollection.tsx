@@ -45,7 +45,6 @@ export default function BadgeCollection() {
     try {
       // 今日まだチェックしていない場合のみバッジチェックを実行
       if (!isCheckedToday() && !hasCheckedToday) {
-        console.log('バッジチェックを実行');
         await checkHomeBadges(user.id);
         updateCheckDate();
         setHasCheckedToday(true);
