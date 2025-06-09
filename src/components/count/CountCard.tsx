@@ -4,7 +4,11 @@ import { DurationCounter } from '@/components/count/DurationCounter';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useUI } from '@/contexts/UIContext';
-import { calculateDaysLeftJST, calculateProgressJST } from '@/lib/dateUtils';
+import {
+  calculateDaysLeftJST,
+  calculateDaysPassedJST,
+  calculateProgressJST,
+} from '@/lib/dateUtils';
 import { createClient } from '@/lib/supabase/client';
 import { CheckCircle, Eye } from 'lucide-react';
 import { ConfirmModal } from '@/components/ConfirmModal';
@@ -29,6 +33,7 @@ export function CountCard({ count }: Props) {
   // 日本時間基準での日数計算
   const daysLeft = calculateDaysLeftJST(count.goalDate);
   const progress = calculateProgressJST(count.startDate, count.goalDate);
+  const daysPassed = calculateDaysPassedJST(count.startDate);
 
   const handleDetail = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -114,13 +119,13 @@ export function CountCard({ count }: Props) {
 
       {count.saveMoneyPerMonth && count.saveMoneyPerMonth > 0 && (
         <p className={`text-sm ${count.isCompleted ? 'text-gray-500' : 'text-gray-700'}`}>
-          月 {count.saveMoneyPerMonth.toLocaleString()} 円節約中
+          {Math.round(count.saveMoneyPerMonth * (daysPassed / 30)).toLocaleString()} 円節約中
         </p>
       )}
 
       {count.saveTimePerMonth && count.saveTimePerMonth > 0 && (
         <p className={`text-sm ${count.isCompleted ? 'text-gray-500' : 'text-gray-700'}`}>
-          月 {count.saveTimePerMonth} 時間節約中
+          {Math.round(count.saveTimePerMonth * (daysPassed / 30))} 時間節約中
         </p>
       )}
 

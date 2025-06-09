@@ -6,6 +6,7 @@ import WeeklyUrgeLogsCard from '@/components/home/WeeklyUrgeLogsCard';
 import AchievementDisplay from '@/components/home/AchievementDisplay';
 import BadgeCollection from '@/components/home/BadgeCollection';
 import { redirect } from 'next/navigation';
+import SavingsSummary from '@/components/home/SavingsSummary';
 
 async function getHomeData() {
   const supabase = await createClient();
@@ -82,8 +83,9 @@ export default async function HomePage() {
   const { counts, weeklyUrgeLogsCount, weeklyUrgeLogs } = await getHomeData();
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="container mx-auto px-4 py-8 space-y-6">
       <MotivationSection />
+      <SavingsSummary />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <ActiveCountsCard counts={counts} />
         <WeeklyUrgeLogsCard count={weeklyUrgeLogsCount} />
