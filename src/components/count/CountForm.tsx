@@ -15,7 +15,8 @@ const countFormSchema = z
   .object({
     title: z.string().min(1, 'カウント名は必須です'),
     startDate: z.string().min(1, '開始日は必須です'),
-    goalDate: z.string().min(1, 'ゴール日は必須です'),
+    hasGoalDate: z.boolean(),
+    goalDate: z.string().optional(),
     saveTimePerMonth: z
       .string()
       .optional()
@@ -30,14 +31,15 @@ const countFormSchema = z
   })
   .refine(
     (data) => {
+      if (!data.hasGoalDate) return true;
       // ゴール日が開始日より後であることを確認
       const startDate = new Date(data.startDate);
-      const goalDate = new Date(data.goalDate);
+      const goalDate = new Date(data.goalDate || '');
       return goalDate >= startDate;
     },
     {
       message: 'ゴール日は開始日以降の日付を選択してください',
-      path: ['goalDate'], // エラーを表示するフィールド
+      path: ['goalDate'],
     }
   )
   .refine(
@@ -49,7 +51,7 @@ const countFormSchema = z
     },
     {
       message: '節約時間または節約金額のどちらか一方は入力してください',
-      path: ['saveTimePerMonth'], // エラーを表示するフィールド（どちらでも良いので時間の方に表示）
+      path: ['saveTimePerMonth'],
     }
   );
 
@@ -72,7 +74,7 @@ type CountFormProps = {
   onSubmit: (values: {
     title: string;
     startDate: string;
-    goalDate: string;
+    goalDate?: string;
     saveTimePerMonth?: number;
     saveMoneyPerMonth?: number;
     reason?: string;
@@ -90,12 +92,14 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
   } = useForm<CountFormValues>({
     resolver: zodResolver(countFormSchema),
     defaultValues: {
       title: initialValues?.title ?? '',
       startDate: initialValues?.startDate ?? '',
+      hasGoalDate: !!initialValues?.goalDate,
       goalDate: initialValues?.goalDate ?? '',
       saveTimePerMonth: initialValues?.saveTimePerMonth?.toString() ?? '',
       saveMoneyPerMonth: initialValues?.saveMoneyPerMonth?.toString() ?? '',
@@ -110,11 +114,13 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
     name: 'ifThenRules',
   });
 
+  const hasGoalDate = watch('hasGoalDate');
+
   const onValid = async (data: CountFormValues) => {
     await onSubmit({
       title: data.title,
       startDate: data.startDate,
-      goalDate: data.goalDate,
+      goalDate: data.hasGoalDate && data.goalDate ? data.goalDate : undefined,
       saveTimePerMonth: data.saveTimePerMonth ? Number(data.saveTimePerMonth) : undefined,
       saveMoneyPerMonth: data.saveMoneyPerMonth ? Number(data.saveMoneyPerMonth) : undefined,
       reason: data.reason,
@@ -142,13 +148,20 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
       </div>
 
       <div>
-        <label className="block text-sm font-medium">ゴール日</label>
-        <input
-          type="date"
-          {...register('goalDate')}
-          className="w-full border rounded p-2 text-gray-900"
-        />
-        {errors.goalDate && <p className="text-red-500 text-sm">{errors.goalDate.message}</p>}
+        <label className="flex items-center gap-2 mb-2">
+          <input type="checkbox" {...register('hasGoalDate')} className="rounded" />
+          <span className="text-sm font-medium">ゴール日を設定する</span>
+        </label>
+        {hasGoalDate && (
+          <>
+            <input
+              type="date"
+              {...register('goalDate')}
+              className="w-full border rounded p-2 text-gray-900"
+            />
+            {errors.goalDate && <p className="text-red-500 text-sm">{errors.goalDate.message}</p>}
+          </>
+        )}
       </div>
 
       <div>

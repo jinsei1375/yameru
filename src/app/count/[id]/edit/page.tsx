@@ -18,7 +18,7 @@ export default async function CountEditPage({ params }: any) {
 
   return (
     <div className="p-4 max-w-md mx-auto">
-      <PageTitle>カウント編集</PageTitle>
+      <PageTitle>カウント詳細</PageTitle>
       <EditCountClient count={countClient} />
     </div>
   );

@@ -6,7 +6,7 @@ export interface Count {
   userId: string;
   title: string;
   startDate: Date;
-  goalDate: Date;
+  goalDate?: Date;
   saveTimePerMonth?: number;
   saveMoneyPerMonth?: number;
   reason?: string; // やめたい理由
@@ -22,7 +22,7 @@ export interface DbCount {
   user_id: string;
   title: string;
   start_date: string;
-  goal_date: string;
+  goal_date?: string | null;
   save_time_per_month?: number | null;
   save_money_per_month?: number | null;
   reason?: string | null;
@@ -37,7 +37,7 @@ export function toDbCount(count: Omit<Count, 'id'>): Omit<DbCount, 'id'> {
     user_id: count.userId,
     title: count.title,
     start_date: count.startDate.toISOString(),
-    goal_date: count.goalDate.toISOString(),
+    goal_date: count.goalDate?.toISOString() ?? null,
     save_time_per_month: count.saveTimePerMonth,
     save_money_per_month: count.saveMoneyPerMonth,
     reason: count.reason,
@@ -53,7 +53,7 @@ export function toCount(dbCount: DbCount): Count {
     userId: dbCount.user_id,
     title: dbCount.title,
     startDate: new Date(dbCount.start_date),
-    goalDate: new Date(dbCount.goal_date),
+    goalDate: dbCount.goal_date ? new Date(dbCount.goal_date) : undefined,
     saveTimePerMonth: dbCount.save_time_per_month ?? undefined,
     saveMoneyPerMonth: dbCount.save_money_per_month ?? undefined,
     reason: dbCount.reason ?? undefined,
@@ -71,7 +71,7 @@ export function toDbCountInsert(count: Omit<Count, 'id'>): DbCountInsert {
     user_id: count.userId,
     title: count.title,
     start_date: count.startDate.toISOString(),
-    goal_date: count.goalDate.toISOString(),
+    goal_date: count.goalDate?.toISOString() ?? null,
     save_time_per_month: count.saveTimePerMonth,
     save_money_per_month: count.saveMoneyPerMonth,
     reason: count.reason,

@@ -31,8 +31,8 @@ export function CountCard({ count }: Props) {
   }, [setGlobalLoading]);
 
   // 日本時間基準での日数計算
-  const daysLeft = calculateDaysLeftJST(count.goalDate);
-  const progress = calculateProgressJST(count.startDate, count.goalDate);
+  const daysLeft = count.goalDate ? calculateDaysLeftJST(count.goalDate) : 0;
+  const progress = count.goalDate ? calculateProgressJST(count.startDate, count.goalDate) : 0;
   const daysPassed = calculateDaysPassedJST(count.startDate);
 
   const handleDetail = (e: React.MouseEvent) => {
@@ -105,7 +105,7 @@ export function CountCard({ count }: Props) {
           {count.title}
         </h2>
         <span className={`text-sm ${count.isCompleted ? 'text-gray-400' : 'text-gray-500'}`}>
-          {count.isCompleted ? '完了' : `残り${daysLeft}日`}
+          {count.isCompleted ? '完了' : count.goalDate ? `残り${daysLeft}日` : '継続中'}
         </span>
       </div>
 
@@ -125,24 +125,21 @@ export function CountCard({ count }: Props) {
 
       {count.saveTimePerMonth && count.saveTimePerMonth > 0 && (
         <p className={`text-sm ${count.isCompleted ? 'text-gray-500' : 'text-gray-700'}`}>
-          {Math.round(count.saveTimePerMonth * (daysPassed / 30))} 時間節約中
+          {Math.round(count.saveTimePerMonth * (daysPassed / 30))} 分節約中
         </p>
       )}
 
-      <div className="mt-3 mb-4">
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-xs text-gray-500">進捗</span>
-          <span className="text-xs text-gray-500">
-            {count.isCompleted ? '100%' : `${Math.round(progress)}%`}
-          </span>
+      {count.goalDate && !count.isCompleted && (
+        <div className="mt-2">
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <p className="text-xs text-gray-500 mt-1 text-right">{progress}%</p>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div
-            className={`h-2 rounded-full ${count.isCompleted ? 'bg-green-400' : 'bg-yellow-400'}`}
-            style={{ width: count.isCompleted ? '100%' : `${progress}%` }}
-          ></div>
-        </div>
-      </div>
+      )}
 
       {/* アクションボタン */}
       <div className="flex gap-2">

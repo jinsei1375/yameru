@@ -130,7 +130,7 @@ export default function EditCountClient({ count }: Props) {
   const handleSubmit = async (values: {
     title: string;
     startDate: string;
-    goalDate: string;
+    goalDate?: string;
     saveTimePerMonth?: number;
     saveMoneyPerMonth?: number;
     reason?: string;
@@ -148,7 +148,7 @@ export default function EditCountClient({ count }: Props) {
         ...localCount,
         title: values.title,
         startDate: new Date(values.startDate),
-        goalDate: new Date(values.goalDate),
+        goalDate: values.goalDate ? new Date(values.goalDate) : undefined,
         saveTimePerMonth: values.saveTimePerMonth ? Number(values.saveTimePerMonth) : undefined,
         saveMoneyPerMonth: values.saveMoneyPerMonth ? Number(values.saveMoneyPerMonth) : undefined,
         reason: values.reason,
@@ -161,7 +161,7 @@ export default function EditCountClient({ count }: Props) {
         .update({
           title: updatedCount.title,
           start_date: updatedCount.startDate.toISOString(),
-          goal_date: updatedCount.goalDate.toISOString(),
+          goal_date: updatedCount.goalDate?.toISOString() ?? null,
           save_time_per_month: updatedCount.saveTimePerMonth,
           save_money_per_month: updatedCount.saveMoneyPerMonth,
           reason: updatedCount.reason,
@@ -233,7 +233,7 @@ export default function EditCountClient({ count }: Props) {
 
         <p>タイトル: {localCount.title}</p>
         <p>開始日: {toLocaleDateStringJST(localCount.startDate)}</p>
-        <p>目標日: {toLocaleDateStringJST(localCount.goalDate)}</p>
+        {localCount.goalDate && <p>目標日: {toLocaleDateStringJST(localCount.goalDate)}</p>}
         <DurationCounter
           startDate={localCount.startDate}
           isCompleted={localCount.isCompleted}
@@ -291,8 +291,8 @@ export default function EditCountClient({ count }: Props) {
         </div>
 
         <div className="mt-6 space-y-3">
-          {/* 達成ボタン（完了していない場合のみ） */}
-          {!localCount.isCompleted && (
+          {/* 達成ボタン（完了していないかつ、ゴール日が設定されている場合のみ） */}
+          {!localCount.isCompleted && localCount.goalDate && (
             <button
               className="w-full px-4 py-3 bg-green-500 text-white rounded font-medium hover:bg-green-600 transition-colors"
               onClick={() => setIsCompleteModalOpen(true)}
@@ -349,7 +349,9 @@ export default function EditCountClient({ count }: Props) {
         initialValues={{
           title: localCount.title,
           startDate: new Date(localCount.startDate).toISOString().slice(0, 10),
-          goalDate: new Date(localCount.goalDate).toISOString().slice(0, 10),
+          goalDate: localCount.goalDate
+            ? new Date(localCount.goalDate).toISOString().slice(0, 10)
+            : undefined,
           saveTimePerMonth: localCount.saveTimePerMonth ?? undefined,
           saveMoneyPerMonth: localCount.saveMoneyPerMonth ?? undefined,
           reason: localCount.reason ?? undefined,

@@ -22,7 +22,7 @@ export default function NewCountPage() {
   const handleSubmit = async (values: {
     title: string;
     startDate: string;
-    goalDate: string;
+    goalDate?: string;
     saveTimePerMonth?: number;
     saveMoneyPerMonth?: number;
     reason?: string;
@@ -43,7 +43,7 @@ export default function NewCountPage() {
         userId: user.id,
         title: values.title,
         startDate: new Date(values.startDate),
-        goalDate: new Date(values.goalDate),
+        goalDate: values.goalDate ? new Date(values.goalDate) : undefined,
         saveTimePerMonth: values.saveTimePerMonth,
         saveMoneyPerMonth: values.saveMoneyPerMonth,
         reason: values.reason,
