@@ -35,7 +35,7 @@ export function LoadingSpinner({ size = 'md', color = 'blue', message }: Loading
 export function LoadingOverlay() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 overflow-hidden">
-      <div className="bg-white p-4 rounded-lg shadow-lg">
+      <div className="p-4 rounded-lg shadow-lg">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     </div>

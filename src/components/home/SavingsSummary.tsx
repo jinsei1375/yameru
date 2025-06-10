@@ -24,10 +24,7 @@ export default function SavingsSummary() {
 
       try {
         const supabase = createClient();
-        const { data: counts, error } = await supabase
-          .from('count_items')
-          .select('*')
-          .eq('user_id', user.id);
+        const { data: counts, error } = await supabase.from('count_items').select('*');
 
         if (error) {
           console.error('節約データの取得に失敗:', error);
@@ -43,8 +40,8 @@ export default function SavingsSummary() {
             );
 
             return {
-              totalMoney: acc.totalMoney + (count.save_money_per_month || 0) * daysDiff,
-              totalTime: acc.totalTime + (count.save_time_per_month || 0) * daysDiff,
+              totalMoney: acc.totalMoney + (count.save_money_per_month / 30 || 0) * daysDiff,
+              totalTime: acc.totalTime + (count.save_time_per_month / 30 || 0) * daysDiff,
             };
           },
           { totalMoney: 0, totalTime: 0 }
@@ -74,10 +71,10 @@ export default function SavingsSummary() {
   const minutes = savings.totalTime % 60;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-400">
+    <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-green-400">
       <h3 className="text-lg font-semibold text-gray-800 mb-4">節約サマリー</h3>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+      <div className="grid grid-cols-2 gap-2">
+        <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
           <Coins className="text-yellow-500" size={20} />
           <div>
             <p className="text-sm text-gray-500">節約金額</p>
@@ -86,7 +83,7 @@ export default function SavingsSummary() {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+        <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
           <Clock className="text-blue-500" size={20} />
           <div>
             <p className="text-sm text-gray-500">節約時間</p>

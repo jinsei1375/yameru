@@ -42,7 +42,6 @@ export async function getUserBadges(userId: string): Promise<Badge[]> {
 
 // ホーム画面でのバッジチェック（クライアントサイド用）
 export async function checkHomeBadges(userId: string): Promise<void> {
-  console.log(userId);
   try {
     const supabase = createClientClient();
 
@@ -60,8 +59,6 @@ export async function checkHomeBadges(userId: string): Promise<void> {
 
     if (!counts || counts.length === 0) {
       return;
-    } else {
-      console.log(counts);
     }
 
     // 最も古いカウントの開始日から経過日数を計算
@@ -71,7 +68,6 @@ export async function checkHomeBadges(userId: string): Promise<void> {
     const streakDays = Math.floor(
       (new Date().getTime() - oldestStartDate.getTime()) / (1000 * 60 * 60 * 24)
     );
-    console.log(streakDays);
 
     // 条件を満たすバッジを取得
     const { data: eligibleBadges } = await supabase
@@ -94,7 +90,6 @@ export async function checkHomeBadges(userId: string): Promise<void> {
     // 新しいバッジを付与
     const newBadges = eligibleBadges.filter((badge) => !existingBadgeIds.includes(badge.id));
     if (newBadges.length > 0) {
-      console.log(newBadges);
       await supabase.from('user_badges').insert(
         newBadges.map((badge) => ({
           user_id: userId,
