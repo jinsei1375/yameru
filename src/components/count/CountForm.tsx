@@ -4,7 +4,10 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Calendar } from 'lucide-react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { ja } from 'date-fns/locale';
 
 const ifThenRuleSchema = z.object({
   ifCondition: z.string().min(1, 'IF条件は必須です'),
@@ -93,6 +96,7 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
     handleSubmit,
     control,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<CountFormValues>({
     resolver: zodResolver(countFormSchema),
@@ -139,11 +143,17 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
 
       <div>
         <label className="block text-sm font-medium">開始日</label>
-        <input
-          type="date"
-          {...register('startDate')}
-          className="w-full border rounded p-2 text-gray-900"
-        />
+        <div className="relative">
+          <DatePicker
+            selected={watch('startDate') ? new Date(watch('startDate') as string) : null}
+            onChange={(date) => setValue('startDate', date ? date.toISOString().slice(0, 10) : '')}
+            dateFormat="yyyy/MM/dd"
+            locale={ja}
+            className="w-full border rounded p-2 text-gray-900 pl-10"
+            placeholderText="日付を選択"
+          />
+          <Calendar className="absolute left-2 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+        </div>
         {errors.startDate && <p className="text-red-500 text-sm">{errors.startDate.message}</p>}
       </div>
 
@@ -153,14 +163,19 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
           <span className="text-sm font-medium">ゴール日を設定する</span>
         </label>
         {hasGoalDate && (
-          <>
-            <input
-              type="date"
-              {...register('goalDate')}
-              className="w-full border rounded p-2 text-gray-900"
+          <div className="relative">
+            <DatePicker
+              selected={watch('goalDate') ? new Date(watch('goalDate') as string) : null}
+              onChange={(date) => setValue('goalDate', date ? date.toISOString().slice(0, 10) : '')}
+              dateFormat="yyyy/MM/dd"
+              locale={ja}
+              className="w-full border rounded p-2 text-gray-900 pl-10"
+              placeholderText="日付を選択"
+              minDate={watch('startDate') ? new Date(watch('startDate')) : undefined}
             />
+            <Calendar className="absolute left-2 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
             {errors.goalDate && <p className="text-red-500 text-sm">{errors.goalDate.message}</p>}
-          </>
+          </div>
         )}
       </div>
 

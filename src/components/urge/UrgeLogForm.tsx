@@ -6,6 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { Count } from '@/interfaces/Count';
 import { getNowJST } from '@/lib/dateUtils';
+import { Calendar } from 'lucide-react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { ja } from 'date-fns/locale';
 
 const urgeLogFormSchema = z.object({
   countId: z.string().min(1, 'カウントを選択してください'),
@@ -40,6 +44,7 @@ export function UrgeLogForm({ counts, onSubmit, loading }: UrgeLogFormProps) {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<UrgeLogFormValues>({
     resolver: zodResolver(urgeLogFormSchema),
@@ -52,7 +57,7 @@ export function UrgeLogForm({ counts, onSubmit, loading }: UrgeLogFormProps) {
       isPastUrge: false,
       occurredAt: (() => {
         const now = getNowJST();
-        return now.toISOString().slice(0, 16); // YYYY-MM-DDTHH:MM形式
+        return now.toISOString().slice(0, 16);
       })(),
     },
   });
@@ -116,11 +121,22 @@ export function UrgeLogForm({ counts, onSubmit, loading }: UrgeLogFormProps) {
       {isPastUrge && (
         <div>
           <label className="block text-sm font-medium">発生日時</label>
-          <input
-            type="datetime-local"
-            {...register('occurredAt')}
-            className="w-full border rounded p-2 text-gray-900"
-          />
+          <div className="relative">
+            <DatePicker
+              selected={watch('occurredAt') ? new Date(watch('occurredAt')) : null}
+              onChange={(date) =>
+                setValue('occurredAt', date ? date.toISOString().slice(0, 16) : '')
+              }
+              dateFormat="yyyy/MM/dd HH:mm"
+              locale={ja}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              className="w-full border rounded p-2 text-gray-900 pl-10"
+              placeholderText="日時を選択"
+            />
+            <Calendar className="absolute left-2 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+          </div>
           {errors.occurredAt && <p className="text-red-500 text-sm">{errors.occurredAt.message}</p>}
         </div>
       )}

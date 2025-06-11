@@ -78,16 +78,16 @@ export default function SavingsSummary() {
           <Coins className="text-yellow-500" size={20} />
           <div>
             <p className="text-sm text-gray-500">節約金額</p>
-            <p className="text-lg font-medium text-gray-900">
-              ¥{savings.totalMoney.toLocaleString()}
-            </p>
+            <div className="text-lg font-bold text-gray-900">
+              ¥{savings.totalMoney.toFixed().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
           <Clock className="text-blue-500" size={20} />
           <div>
             <p className="text-sm text-gray-500">節約時間</p>
-            <p className="text-lg font-medium text-gray-900">
+            <p className="text-lg font-bold text-gray-900">
               {hours}時間{minutes}分
             </p>
           </div>
