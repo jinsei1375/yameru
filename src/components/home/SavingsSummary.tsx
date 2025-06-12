@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Clock, Coins } from 'lucide-react';
+import CountUp from 'react-countup';
 
 interface Savings {
   totalMoney: number;
@@ -79,7 +80,14 @@ export default function SavingsSummary() {
           <div>
             <p className="text-sm text-gray-500">節約金額</p>
             <div className="text-lg font-bold text-gray-900">
-              ¥{savings.totalMoney.toFixed().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              ¥
+              <CountUp
+                end={savings.totalMoney}
+                duration={1}
+                separator=","
+                decimals={0}
+                preserveValue
+              />
             </div>
           </div>
         </div>
@@ -88,7 +96,9 @@ export default function SavingsSummary() {
           <div>
             <p className="text-sm text-gray-500">節約時間</p>
             <p className="text-lg font-bold text-gray-900">
-              {hours}時間{minutes}分
+              <CountUp end={hours} duration={2} preserveValue />
+              時間
+              <CountUp end={minutes} duration={2} preserveValue />分
             </p>
           </div>
         </div>
