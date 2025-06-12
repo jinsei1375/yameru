@@ -14,6 +14,8 @@ export interface Count {
   ifThenRules?: IfThenRule[]; // If-Then ルール
   isCompleted: boolean;
   completedDate?: Date; // 完了日時
+  failedMoney?: number; // 失敗時に損失した金額
+  failedTime?: number; // 失敗時に損失した時間
 }
 
 // 2. DB用型（スネークケース、日付はISO8601文字列）
@@ -29,6 +31,8 @@ export interface DbCount {
   commitment?: string | null;
   is_completed: boolean; // 完了フラグ
   completed_date?: string | null; // 完了日時
+  failed_money?: number | null; // 失敗時に損失した金額
+  failed_time?: number | null; // 失敗時に損失した時間
 }
 
 // 3. 変換関数（フロント→DB）
@@ -43,6 +47,8 @@ export function toDbCount(count: Omit<Count, 'id'>): Omit<DbCount, 'id'> {
     reason: count.reason,
     commitment: count.commitment,
     is_completed: false,
+    failed_money: count.failedMoney,
+    failed_time: count.failedTime,
   };
 }
 
@@ -60,6 +66,8 @@ export function toCount(dbCount: DbCount): Count {
     commitment: dbCount.commitment ?? undefined,
     isCompleted: dbCount.is_completed,
     completedDate: dbCount.completed_date ? new Date(dbCount.completed_date) : undefined,
+    failedMoney: dbCount.failed_money ?? undefined,
+    failedTime: dbCount.failed_time ?? undefined,
   };
 }
 
@@ -77,5 +85,7 @@ export function toDbCountInsert(count: Omit<Count, 'id'>): DbCountInsert {
     reason: count.reason,
     commitment: count.commitment,
     is_completed: false,
+    failed_money: count.failedMoney,
+    failed_time: count.failedTime,
   };
 }

@@ -6,7 +6,7 @@ import WeeklyUrgeLogsCard from '@/components/home/WeeklyUrgeLogsCard';
 import AchievementDisplay from '@/components/home/AchievementDisplay';
 import BadgeCollection from '@/components/home/BadgeCollection';
 import { redirect } from 'next/navigation';
-import SavingsSummary from '@/components/home/SavingsSummary';
+import { SavingsSummary } from '@/components/home/SavingsSummary';
 
 async function getHomeData() {
   const supabase = await createClient();

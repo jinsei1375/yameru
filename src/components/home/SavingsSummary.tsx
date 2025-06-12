@@ -3,103 +3,133 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { Clock, Coins } from 'lucide-react';
+import { Clock, Coins, PiggyBank, Loader2 } from 'lucide-react';
 import CountUp from 'react-countup';
 
 interface Savings {
   totalMoney: number;
   totalTime: number;
+  failedMoney: number;
+  failedTime: number;
 }
 
-export default function SavingsSummary() {
+export function SavingsSummary() {
+  const [savings, setSavings] = useState<Savings>({
+    totalMoney: 0,
+    totalTime: 0,
+    failedMoney: 0,
+    failedTime: 0,
+  });
+  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
-  const [savings, setSavings] = useState<Savings>({ totalMoney: 0, totalTime: 0 });
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchSavings = async () => {
-      if (!user) {
-        setIsLoading(false);
-        return;
-      }
+      if (!user) return;
 
       try {
         const supabase = createClient();
-        const { data: counts, error } = await supabase.from('count_items').select('*');
+        const { data: counts, error } = await supabase
+          .from('count_items')
+          .select('*')
+          .eq('user_id', user.id);
 
-        if (error) {
-          console.error('節約データの取得に失敗:', error);
-          return;
-        }
+        if (error) throw error;
 
-        const total = counts.reduce(
-          (acc, count) => {
+        let totalMoney = 0;
+        let totalTime = 0;
+        let failedMoney = 0;
+        let failedTime = 0;
+
+        counts.forEach((count) => {
+          if (count.is_completed) {
+            // 完了済みのカウントの場合、失敗時の損失を加算
+            failedMoney += count.failed_money || 0;
+            failedTime += count.failed_time || 0;
+          } else {
+            // 進行中のカウントの場合、節約金額・時間を計算
             const startDate = new Date(count.start_date);
-            const endDate = count.is_completed ? new Date(count.completed_date) : new Date();
-            const daysDiff = Math.floor(
-              (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-            );
+            const now = new Date();
+            const monthsPassed = (now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 30);
 
-            return {
-              totalMoney: acc.totalMoney + (count.save_money_per_month / 30 || 0) * daysDiff,
-              totalTime: acc.totalTime + (count.save_time_per_month / 30 || 0) * daysDiff,
-            };
-          },
-          { totalMoney: 0, totalTime: 0 }
-        );
+            if (count.save_money_per_month) {
+              totalMoney += count.save_money_per_month * monthsPassed;
+            }
+            if (count.save_time_per_month) {
+              totalTime += count.save_time_per_month * monthsPassed;
+            }
+          }
+        });
 
-        setSavings(total);
+        setSavings({
+          totalMoney,
+          totalTime,
+          failedMoney,
+          failedTime,
+        });
       } catch (error) {
-        console.error('節約データの取得中にエラー:', error);
+        console.error('節約データの取得に失敗:', error);
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
     fetchSavings();
   }, [user]);
 
-  if (isLoading) {
+  if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-400">
-        <div className="text-center py-8 text-gray-500">読み込み中...</div>
+      <div className="bg-white rounded-2xl shadow p-4 border">
+        <div className="flex items-center justify-center h-32">
+          <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+        </div>
       </div>
     );
   }
 
-  // 時間を時間と分に変換
-  const hours = Math.floor(savings.totalTime / 60);
-  const minutes = savings.totalTime % 60;
+  const netMoney = savings.totalMoney - savings.failedMoney;
+  const netTime = savings.totalTime - savings.failedTime;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-green-400">
-      <h3 className="text-lg font-semibold text-gray-800 mb-4">節約サマリー</h3>
-      <div className="grid grid-cols-2 gap-2">
-        <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
-          <Coins className="text-yellow-500" size={20} />
-          <div>
-            <p className="text-sm text-gray-500">節約金額</p>
-            <div className="text-lg font-bold text-gray-900">
-              ¥
-              <CountUp
-                end={savings.totalMoney}
-                duration={1}
-                separator=","
-                decimals={0}
-                preserveValue
-              />
+    <div className="bg-white rounded-2xl shadow p-4 border">
+      <div className="flex items-center space-x-2 mb-4">
+        <PiggyBank className="w-5 h-5 text-blue-500" />
+        <h2 className="text-lg font-semibold text-gray-700">節約サマリー</h2>
+      </div>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Coins className="w-5 h-5 text-yellow-500" />
+            <span className="text-sm text-gray-700">節約金額</span>
+          </div>
+          <div className="text-right">
+            <div className="text-lg font-semibold text-gray-700">
+              <CountUp end={netMoney} duration={2} separator="," decimals={0} preserveValue />円
             </div>
+            {savings.failedMoney > 0 && (
+              <div className="text-sm text-red-500">
+                損失: {savings.failedMoney.toLocaleString()}円
+              </div>
+            )}
           </div>
         </div>
-        <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
-          <Clock className="text-blue-500" size={20} />
-          <div>
-            <p className="text-sm text-gray-500">節約時間</p>
-            <p className="text-lg font-bold text-gray-900">
-              <CountUp end={hours} duration={2} preserveValue />
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Clock className="w-5 h-5 text-green-500" />
+            <span className="text-sm text-gray-700">節約時間</span>
+          </div>
+          <div className="text-right">
+            <div className="text-lg font-semibold text-gray-700">
+              <CountUp end={Math.floor(netTime / 60)} duration={2} preserveValue />
               時間
-              <CountUp end={minutes} duration={2} preserveValue />分
-            </p>
+              <CountUp end={Math.floor(netTime % 60)} duration={2} preserveValue />分
+            </div>
+            {savings.failedTime > 0 && (
+              <div className="text-sm text-red-500">
+                損失: {Math.floor(savings.failedTime / 60)}時間{savings.failedTime % 60}分
+              </div>
+            )}
           </div>
         </div>
       </div>
