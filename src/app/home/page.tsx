@@ -83,9 +83,9 @@ export default async function HomePage() {
   const { counts, weeklyUrgeLogsCount, weeklyUrgeLogs } = await getHomeData();
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-6">
-      <MotivationSection />
+    <div className="container mx-auto px-4 py-8 pt-0 space-y-6">
       <SavingsSummary />
+      <MotivationSection />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <ActiveCountsCard counts={counts} />
         <WeeklyUrgeLogsCard count={weeklyUrgeLogsCount} />

@@ -1,19 +1,6 @@
 export default function MotivationSection() {
   const currentHour = new Date().getHours();
 
-  // 時間帯に応じたメッセージ
-  const getTimeBasedMessage = () => {
-    if (currentHour < 6) {
-      return '夜更かしお疲れさまです。無理をせず、早めに休んでくださいね。';
-    } else if (currentHour < 12) {
-      return 'おはようございます！今日も一歩ずつ前進していきましょう。';
-    } else if (currentHour < 18) {
-      return 'お疲れさまです。午後も自分のペースで頑張りましょう。';
-    } else {
-      return '一日お疲れさまでした。今日の頑張りを振り返ってみませんか？';
-    }
-  };
-
   const motivationalQuotes = [
     {
       quote: '成功とは、失敗から失敗へと、情熱を失うことなく進むことである',
@@ -46,8 +33,6 @@ export default function MotivationSection() {
 
   return (
     <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 text-center">
-      <h2 className="text-xl font-semibold text-gray-800 mb-3">{getTimeBasedMessage()}</h2>
-
       <blockquote className="text-gray-600 italic text-sm border-l-4 border-blue-300 pl-4 py-2 bg-white bg-opacity-50 rounded">
         <p className="mb-2">&quot;{randomQuote.quote}&quot;</p>
         <cite className="text-xs text-gray-500 not-italic">— {randomQuote.author}</cite>
