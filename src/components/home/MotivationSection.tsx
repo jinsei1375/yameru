@@ -1,6 +1,4 @@
 export default function MotivationSection() {
-  const currentHour = new Date().getHours();
-
   const motivationalQuotes = [
     {
       quote: '成功とは、失敗から失敗へと、情熱を失うことなく進むことである',
