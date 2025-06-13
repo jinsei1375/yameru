@@ -1,6 +1,11 @@
+'use client';
+
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function HeroSection() {
+  const { user } = useAuth();
+
   return (
     <section className="text-center py-12 px-6 bg-gradient-to-b from-yellow-50 to-white">
       <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight leading-tight">
@@ -18,10 +23,10 @@ export default function HeroSection() {
       </p>
       <div className="mt-10">
         <Link
-          href="/login"
+          href={user ? '/home' : '/login'}
           className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-full shadow transition"
         >
-          はじめてみる
+          {user ? 'ホームへ' : 'はじめてみる'}
         </Link>
       </div>
     </section>
