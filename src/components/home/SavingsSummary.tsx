@@ -121,9 +121,10 @@ export function SavingsSummary() {
           </div>
           <div className="text-right">
             <div className="text-lg font-semibold text-gray-700">
-              <CountUp end={Math.floor(netTime / 60)} duration={2} preserveValue />
+              {netTime < 0 ? '-' : ''}
+              <CountUp end={Math.abs(Math.floor(netTime / 60))} duration={2} preserveValue />
               時間
-              <CountUp end={Math.floor(netTime % 60)} duration={2} preserveValue />分
+              <CountUp end={Math.abs(Math.floor(netTime % 60))} duration={2} preserveValue />分
             </div>
             {savings.failedTime > 0 && (
               <div className="text-sm text-red-500">
