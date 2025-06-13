@@ -73,7 +73,7 @@ export async function checkHomeBadges(userId: string): Promise<void> {
     const { data: eligibleBadges } = await supabase
       .from('badges')
       .select('*')
-      .eq('days_required', streakDays);
+      .lte('days_required', streakDays);
 
     if (!eligibleBadges || eligibleBadges.length === 0) {
       return;
