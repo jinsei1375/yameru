@@ -1,13 +1,6 @@
-'use client';
-
 import Link from 'next/link';
-import { useAuth } from '@/contexts/AuthContext';
 
 export default function CTASection() {
-  const { user } = useAuth();
-  const buttonText = user ? 'ホームへ' : 'はじめてみる';
-  const buttonLink = user ? '/home' : '/login';
-
   return (
     <div className="text-center">
       <div className="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
@@ -22,10 +15,10 @@ export default function CTASection() {
           ここから始まります。
         </p>
         <Link
-          href={buttonLink}
+          href={'/login'}
           className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-yellow-500 rounded-xl hover:bg-yellow-600 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
         >
-          {buttonText}
+          はじめてみる
           <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
