@@ -7,28 +7,33 @@ export default function HeroSection() {
   const { user } = useAuth();
 
   return (
-    <section className="text-center py-12 px-6 bg-gradient-to-b from-yellow-50 to-white">
-      <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight leading-tight">
-        「やめたい」を
-        <br className="md:hidden" /> 続けられる力に
+    <div className="text-center pt-0">
+      <h1 className="text-4xl font-bold mb-6 text-gray-800">
+        やめることを、
+        <br />
+        あなたの強みに
       </h1>
-      <p className="mt-6 text-lg md:text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed">
-        ギャンブル。暴飲暴食。無駄遣い。
+      <p className="text-lg text-gray-600 mb-8">
+        タバコ、お酒、SNS、ゲーム...
         <br />
-        やめるのは難しい。けれど、やめられたら、人生は変わる。
+        やめたいと思っていても、なかなか続かない。
         <br />
-        <span className="font-medium text-gray-800 block mt-4">
-          Yameruは、「やめたい」を応援する記録アプリです。
-        </span>
+        それは、あなたの意志が弱いからではありません。
       </p>
-      <div className="mt-10">
-        <Link
-          href={user ? '/home' : '/login'}
-          className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-full shadow transition"
-        >
-          {user ? 'ホームへ' : 'はじめてみる'}
-        </Link>
-      </div>
-    </section>
+      <Link
+        href={user ? '/home' : '/login'}
+        className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-yellow-500 rounded-xl hover:bg-yellow-600 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+      >
+        {user ? 'ホームへ' : 'はじめてみる'}
+        <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M13 7l5 5m0 0l-5 5m5-5H6"
+          />
+        </svg>
+      </Link>
+    </div>
   );
 }

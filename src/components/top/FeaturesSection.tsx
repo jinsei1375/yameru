@@ -1,58 +1,122 @@
+'use client';
+
+import { PenLine, Clock, Wallet, Target, BarChart3, Trophy, Bot, Users } from 'lucide-react';
+
 export default function FeaturesSection() {
   return (
-    <section className="max-w-4xl mx-auto px-4 text-left space-y-10">
-      {/* 現在の機能 */}
-      <div>
-        <h2 className="text-2xl font-semibold mb-4">主な機能</h2>
-        <ul className="space-y-4">
-          <li>
-            <h3 className="text-lg font-medium">📝 やめたい行動を記録</h3>
-            <p>何を、いつからやめているのかをカウントします。</p>
-          </li>
-          <li>
-            <h3 className="text-lg font-medium">⏳ 継続日数を自動カウント</h3>
-            <p>やめ続けている日数をリアルタイムで表示します。</p>
-          </li>
-          <li>
-            <h3 className="text-lg font-medium">💰 節約した時間・お金を可視化</h3>
-            <p>やめることで得られた成果が一目でわかります。</p>
-          </li>
-        </ul>
+    <div className="text-center pt-0">
+      <div className="inline-block bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+        主な機能
+      </div>
+      <div className="space-y-8">
+        <div className="flex items-start space-x-4 group">
+          <div className="flex-shrink-0 w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center group-hover:bg-yellow-200 transition-colors">
+            <PenLine className="w-6 h-6 text-yellow-600" />
+          </div>
+          <div>
+            <h3 className="text-lg font-medium text-gray-800 mb-2 group-hover:text-yellow-600 transition-colors">
+              やめたい行動を記録
+            </h3>
+            <p className="text-gray-600">何を、いつからやめているのかをカウントします。</p>
+          </div>
+        </div>
+
+        <div className="flex items-start space-x-4 group">
+          <div className="flex-shrink-0 w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center group-hover:bg-yellow-200 transition-colors">
+            <Clock className="w-6 h-6 text-yellow-600" />
+          </div>
+          <div>
+            <h3 className="text-lg font-medium text-gray-800 mb-2 group-hover:text-yellow-600 transition-colors">
+              継続日数を自動カウント
+            </h3>
+            <p className="text-gray-600">やめ続けている日数をリアルタイムで表示します。</p>
+          </div>
+        </div>
+
+        <div className="flex items-start space-x-4 group">
+          <div className="flex-shrink-0 w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center group-hover:bg-yellow-200 transition-colors">
+            <Wallet className="w-6 h-6 text-yellow-600" />
+          </div>
+          <div>
+            <h3 className="text-lg font-medium text-gray-800 mb-2 group-hover:text-yellow-600 transition-colors">
+              節約した時間・お金を可視化
+            </h3>
+            <p className="text-gray-600">やめることで得られた成果が一目でわかります。</p>
+          </div>
+        </div>
+
+        <div className="flex items-start space-x-4 group">
+          <div className="flex-shrink-0 w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center group-hover:bg-yellow-200 transition-colors">
+            <Target className="w-6 h-6 text-yellow-600" />
+          </div>
+          <div>
+            <h3 className="text-lg font-medium text-gray-800 mb-2 group-hover:text-yellow-600 transition-colors">
+              目標設定と達成度管理
+            </h3>
+            <p className="text-gray-600">具体的な目標を設定し、達成度を可視化します。</p>
+          </div>
+        </div>
+        <div className="flex items-start space-x-4 group">
+          <div className="flex-shrink-0 w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center group-hover:bg-yellow-200 transition-colors">
+            <Trophy className="w-6 h-6 text-yellow-600" />
+          </div>
+          <div>
+            <h3 className="text-lg font-medium text-gray-800 mb-2 group-hover:text-purple-600 transition-colors">
+              達成バッジとモチベーション
+            </h3>
+            <p className="text-gray-600">
+              目標達成時にバッジを獲得し、モチベーションを維持します。
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* 今後の予定 */}
-      <div>
-        <h2 className="text-2xl font-semibold mb-4">今後のアップデート予定</h2>
-        <ul className="space-y-4">
-          <li>
-            <h3 className="text-lg font-medium">🎯 やめる理由・目標の記入</h3>
-            <p>自分自身の目的を可視化し、やめるモチベーションを高めます。</p>
-          </li>
-          <li>
-            <h3 className="text-lg font-medium">🎁 報酬リスト管理</h3>
-            <p>やめられたご褒美を事前に設定して、楽しみながら継続。</p>
-          </li>
-          <li>
-            <h3 className="text-lg font-medium">📓 衝動ログ</h3>
-            <p>やめたくなる瞬間を記録し、パターンを可視化します。</p>
-          </li>
-          <li>
-            <h3 className="text-lg font-medium">🧑‍🤝‍🧑 バディ機能</h3>
-            <p>一緒にがんばる仲間とつながることで挫折を防ぎます。</p>
-          </li>
-          {/* <li>
-            <h3 className="text-lg font-medium">🚫 アクセスブロック</h3>
-            <p>やめたい行動を誘発するサイト・アプリへのアクセスを制限。</p>
-          </li> */}
-          <li>
-            <h3 className="text-lg font-medium">🤖 AIサポート（予定）</h3>
-            <ul className="ml-5 list-disc text-sm space-y-1">
-              <li>衝動パターンの分析</li>
-              <li>代替行動の提案</li>
-            </ul>
-          </li>
-        </ul>
+      <div className="mt-12">
+        <div className="inline-block bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+          今後のアップデート予定
+        </div>
+        <div className="space-y-8">
+          <div className="flex items-start space-x-4 group">
+            <div className="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+              <BarChart3 className="w-6 h-6 text-purple-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-medium text-gray-800 mb-2 group-hover:text-purple-600 transition-colors">
+                詳細な統計と分析
+              </h3>
+              <p className="text-gray-600">継続状況や節約効果をグラフで確認できます。</p>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-4 group">
+            <div className="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+              <Bot className="w-6 h-6 text-purple-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-medium text-gray-800 mb-2 group-hover:text-purple-600 transition-colors">
+                AIアシスト機能
+              </h3>
+              <p className="text-gray-600">
+                AIがあなたの継続をサポートし、モチベーションを維持するためのアドバイスを提供します。
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-4 group">
+            <div className="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+              <Users className="w-6 h-6 text-purple-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-medium text-gray-800 mb-2 group-hover:text-purple-600 transition-colors">
+                バディ機能
+              </h3>
+              <p className="text-gray-600">
+                同じ目標を持つ仲間と励まし合い、一緒に目標達成を目指します。
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }
