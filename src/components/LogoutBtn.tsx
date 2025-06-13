@@ -4,21 +4,18 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { useUI } from '@/contexts/UIContext';
-import { useRouter } from 'next/navigation';
 
 export default function LogoutButton() {
   const { signOut } = useAuth();
   const { setLoading: setGlobalLoading } = useUI();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const router = useRouter();
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
     setGlobalLoading(true);
     try {
       await signOut();
-      // キャッシュを無効化してログインページにリダイレクト
-      router.push('/login?t=' + new Date().getTime());
+      window.location.href = '/login';
     } catch (error) {
       console.error('ログアウトエラー:', error);
     } finally {
