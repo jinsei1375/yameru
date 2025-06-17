@@ -8,6 +8,7 @@ import { Plus, Trash2, Calendar } from 'lucide-react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ja } from 'date-fns/locale';
+import { InfoButton } from '../InfoButton';
 
 const ifThenRuleSchema = z.object({
   ifCondition: z.string().min(1, 'IF条件は必須です'),
@@ -231,7 +232,14 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
       {/* If-Then ルールセクション */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <label className="block text-sm font-medium">If-Then ルール</label>
+          <label className="block text-sm font-medium">
+            If-Then ルール
+            <InfoButton
+              title="If-Then ルール"
+              content="やめたくなった時の対処法を「もし〜なら、〜する」の形で設定できます。"
+              size="sm"
+            />
+          </label>
           <button
             type="button"
             onClick={() => append({ ifCondition: '', thenAction: '' })}
@@ -241,9 +249,6 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
             追加
           </button>
         </div>
-        <p className="text-xs text-gray-500">
-          やめたくなった時の対処法を「もし〜なら、〜する」の形で設定できます
-        </p>
 
         {fields.map((field, index) => (
           <div key={field.id} className="border border-gray-200 rounded p-4 space-y-3">
