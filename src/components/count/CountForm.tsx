@@ -236,7 +236,7 @@ export function CountForm({ initialValues, onSubmit, loading }: CountFormProps) 
             If-Then ルール
             <InfoButton
               title="If-Then ルール"
-              content="やめたくなった時の対処法を「もし〜なら、〜する」の形で設定できます。"
+              content={`やめたくなった時の対処法を\n「もし〜なら、〜する」の形で設定できます。`}
               size="sm"
             />
           </label>
