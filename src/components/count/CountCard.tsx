@@ -89,14 +89,27 @@ export function CountCard({ count }: Props) {
   const failedMoney = count.failedMoney ?? 0;
   const failedTime = count.failedTime ?? 0;
 
+  // リセット済みかどうかの判定
+  const isReset = failedMoney > 0 || failedTime > 0;
+
   return (
     <>
       <div
         className="bg-white rounded-2xl shadow p-4 border hover:shadow-lg transition-shadow cursor-pointer"
         onClick={handleDetail}
       >
-        {/* 完了済みの場合の表示 */}
-        {count.isCompleted && (
+        {/* 完了済みかつリセット済みの場合の表示 */}
+        {count.isCompleted && isReset && (
+          <div className="bg-yellow-100 border border-yellow-200 rounded-lg p-2 mb-3">
+            <div className="flex items-center gap-2 text-yellow-800">
+              <RefreshCw size={16} />
+              <span className="text-sm font-medium">リセット済み</span>
+            </div>
+          </div>
+        )}
+
+        {/* 完了済みかつリセットなしの場合の表示 */}
+        {count.isCompleted && !isReset && (
           <div className="bg-green-100 border border-green-200 rounded-lg p-2 mb-3">
             <div className="flex items-center gap-2 text-green-800">
               <CheckCircle size={16} />
@@ -106,7 +119,7 @@ export function CountCard({ count }: Props) {
         )}
 
         {/* 進行中の場合の表示 */}
-        {!count.isCompleted && (
+        {!count.isCompleted && !isReset && (
           <div className="bg-blue-100 border border-blue-200 rounded-lg p-2 mb-3">
             <div className="flex items-center gap-2 text-blue-800">
               <CheckCircle size={16} />
@@ -118,13 +131,17 @@ export function CountCard({ count }: Props) {
         <div className="flex justify-between items-center mb-2">
           <h2
             className={`text-lg font-semibold ${
-              count.isCompleted ? 'text-gray-500' : 'text-gray-700'
+              count.isCompleted || isReset ? 'text-gray-500' : 'text-gray-700'
             }`}
           >
             {count.title}
           </h2>
-          <span className={`text-sm ${count.isCompleted ? 'text-gray-400' : 'text-gray-500'}`}>
-            {count.isCompleted ? '完了' : count.goalDate ? `残り${daysLeft}日` : '継続中'}
+          <span
+            className={`text-sm ${
+              count.isCompleted || isReset ? 'text-gray-400' : 'text-gray-500'
+            }`}
+          >
+            {count.goalDate && !count.isCompleted && `残り${daysLeft}日`}
           </span>
         </div>
 

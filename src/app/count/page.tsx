@@ -34,7 +34,7 @@ export default async function CountListPage() {
         {/* アクティブなカウント */}
         {activeCounts.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-xl font-semibold mb-4">進行中のカウント</h2>
+            <h2 className="text-xl font-semibold mb-4">進行中カウント</h2>
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
               {activeCounts.map((count) => (
                 <CountCard key={count.id} count={count} />
@@ -46,7 +46,7 @@ export default async function CountListPage() {
         {/* 完了済みのカウント */}
         {completedCounts.length > 0 && (
           <div>
-            <h2 className="text-xl font-semibold mb-4">達成済みのカウント</h2>
+            <h2 className="text-xl font-semibold mb-4">達成/リセット済みカウント</h2>
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
               {completedCounts.map((count) => (
                 <CountCard key={count.id} count={count} />
