@@ -13,7 +13,6 @@ import { createClient } from '@/lib/supabase/client';
 import { CheckCircle, RefreshCw } from 'lucide-react';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { ResetCountModal } from '@/components/count/ResetCountModal';
-import { InfoButton } from '@/components/InfoButton';
 
 type Props = {
   count: Count;
@@ -158,11 +157,6 @@ export function CountCard({ count }: Props) {
           <p className={`text-sm ${count.isCompleted ? 'text-gray-500' : 'text-gray-700'}`}>
             <span className="inline-flex items-center gap-1">
               {savings.money.toLocaleString()} 円{count.isCompleted ? '節約済み' : '節約中'}
-              <InfoButton
-                title="節約金額について"
-                content={`この金額は月間節約予定額（${count.saveMoneyPerMonth?.toLocaleString()}円）を基に、経過日数から算出された推定節約額です。\n\nリセットによる損失がある場合は、その分が差し引かれて表示されます。`}
-                size="sm"
-              />
             </span>
             {failedMoney > 0 && (
               <span className="text-red-500 ml-2">(損失: {failedMoney.toLocaleString()}円)</span>
@@ -174,11 +168,6 @@ export function CountCard({ count }: Props) {
           <p className={`text-sm ${count.isCompleted ? 'text-gray-500' : 'text-gray-700'}`}>
             <span className="inline-flex items-center gap-1">
               {savings.time} 分{count.isCompleted ? '節約済み' : '節約中'}
-              <InfoButton
-                title="節約時間について"
-                content={`この時間は月間節約予定時間（${count.saveTimePerMonth}分）を基に、経過日数から算出された推定節約時間です。\n\nリセットによる損失がある場合は、その分が差し引かれて表示されます。`}
-                size="sm"
-              />
             </span>
             {failedTime > 0 && <span className="text-red-500 ml-2">(損失: {failedTime}分)</span>}
           </p>
