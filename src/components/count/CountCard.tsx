@@ -10,9 +10,10 @@ import {
   calculateProgressJST,
 } from '@/lib/dateUtils';
 import { createClient } from '@/lib/supabase/client';
-import { CheckCircle, RefreshCw } from 'lucide-react';
+import { CheckCircle, RefreshCw, Share, X as XIcon } from 'lucide-react';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { ResetCountModal } from '@/components/count/ResetCountModal';
+import { SnsShareModal } from '@/components/SnsShareModal';
 
 type Props = {
   count: Count;
@@ -22,6 +23,7 @@ export function CountCard({ count }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const { showNotification, setLoading: setGlobalLoading } = useUI();
   const router = useRouter();
 
@@ -92,10 +94,18 @@ export function CountCard({ count }: Props) {
   // リセット済みかどうかの判定
   const isReset = failedMoney > 0 || failedTime > 0;
 
+  // シェア用テキスト生成
+  const shareUrl = process.env.NEXT_PUBLIC_SHARE_URL;
+  const shareText = `「${count.title}」を${daysPassed}日継続中！\n${
+    savings.money > 0 ? `${savings.money.toLocaleString()}円` : ''
+  }${savings.money > 0 && savings.time > 0 ? '・' : ''}${
+    savings.time > 0 ? `${savings.time}分` : ''
+  }節約中\n${shareUrl}\n#Yameru`;
+
   return (
     <>
       <div
-        className="bg-white rounded-2xl shadow p-4 border hover:shadow-lg transition-shadow cursor-pointer"
+        className="relative bg-white rounded-2xl shadow p-4 border hover:shadow-lg transition-shadow cursor-pointer"
         onClick={handleDetail}
       >
         {/* 完了済みかつリセット済みの場合の表示 */}
@@ -205,6 +215,22 @@ export function CountCard({ count }: Props) {
             </button>
           </div>
         )}
+
+        {/* SNSシェアボタン */}
+        <div className="absolute bottom-3 right-3 z-10">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsShareModalOpen(true);
+            }}
+            className="f"
+            aria-label="シェア"
+            title="シェア"
+          >
+            <Share className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
       <ConfirmModal
@@ -220,6 +246,12 @@ export function CountCard({ count }: Props) {
         isOpen={isResetModalOpen}
         onClose={() => setIsResetModalOpen(false)}
         count={count}
+      />
+
+      <SnsShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        shareText={shareText}
       />
     </>
   );
