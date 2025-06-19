@@ -10,7 +10,7 @@ import {
   calculateProgressJST,
 } from '@/lib/dateUtils';
 import { createClient } from '@/lib/supabase/client';
-import { CheckCircle, RefreshCw, Share, X as XIcon } from 'lucide-react';
+import { CheckCircle, RefreshCw, Share } from 'lucide-react';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { ResetCountModal } from '@/components/count/ResetCountModal';
 import { SnsShareModal } from '@/components/SnsShareModal';
