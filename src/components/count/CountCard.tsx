@@ -95,12 +95,25 @@ export function CountCard({ count }: Props) {
   const isReset = failedMoney > 0 || failedTime > 0;
 
   // シェア用テキスト生成
+  let statusText = '';
+  if (count.isCompleted && isReset) {
+    statusText = 'リセット済み';
+  } else if (count.isCompleted) {
+    statusText = '達成済み！';
+  } else if (isReset) {
+    statusText = 'リセット済み';
+  } else {
+    statusText = '継続中！';
+  }
+
+  const savingsText = count.isCompleted ? '節約済み' : '節約中';
+
   const shareUrl = process.env.NEXT_PUBLIC_SHARE_URL;
-  const shareText = `「${count.title}」を${daysPassed}日継続中！\n${
+  const shareText = `「${count.title}」${statusText}\n${daysPassed}日${statusText}\n${
     savings.money > 0 ? `${savings.money.toLocaleString()}円` : ''
   }${savings.money > 0 && savings.time > 0 ? '・' : ''}${
     savings.time > 0 ? `${savings.time}分` : ''
-  }節約中\n${shareUrl}\n#Yameru`;
+  }${savings.money > 0 || savings.time > 0 ? savingsText : ''}\n${shareUrl}\n#Yameru`;
 
   return (
     <>
@@ -224,7 +237,7 @@ export function CountCard({ count }: Props) {
               e.stopPropagation();
               setIsShareModalOpen(true);
             }}
-            className="f"
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-700 shadow transition-colors"
             aria-label="シェア"
             title="シェア"
           >

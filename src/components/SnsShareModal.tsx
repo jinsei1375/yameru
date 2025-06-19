@@ -31,7 +31,7 @@ export function SnsShareModal({
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.2 }}
             >
-              <DialogPanel className="bg-white rounded-lg shadow-xl w-full max-w-xs p-6 relative">
+              <DialogPanel className="bg-white rounded-lg shadow-xl w-full max-w-md min-w-[300px] sm:min-w-[400px] p-8 relative">
                 <button
                   onClick={onClose}
                   className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
@@ -39,7 +39,7 @@ export function SnsShareModal({
                 >
                   <X size={20} />
                 </button>
-                <DialogTitle className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <DialogTitle className="text-lg font-semibold text-gray-900 mb-4 flex justify-center items-center gap-2">
                   シェアする
                 </DialogTitle>
                 <div className="space-y-4">
