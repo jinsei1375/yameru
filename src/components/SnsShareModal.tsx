@@ -1,6 +1,7 @@
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
+import LineShareButton from '@/components/LineShareButton';
 
 export type SnsType = 'x';
 
@@ -49,6 +50,9 @@ export function SnsShareModal({
                   >
                     Xでシェア
                   </button>
+                </div>
+                <div className="space-y-4">
+                  <LineShareButton />
                 </div>
               </DialogPanel>
             </motion.div>
